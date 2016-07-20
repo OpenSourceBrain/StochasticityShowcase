@@ -18,7 +18,7 @@ filename = normalized_filename("Results", "StepCurrentSource", "pkl", simulator_
 record('v', cell, filename, annotations={'script_name': __file__})
 run(500.0)
 
-if not '-nogui' in sys.argv:
+if '--plot-figure' in sys.argv:
     
     import matplotlib.pyplot as plt
     plt.ion()
