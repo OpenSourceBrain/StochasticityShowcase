@@ -1,0 +1,77 @@
+<Lems>
+
+
+    <!-- Specify which component to run -->
+    <Target component="sim1"/>
+
+    <!-- Include core NeuroML2 ComponentType definitions -->
+    <Include file="Cells.xml"/>
+    <Include file="Networks.xml"/>
+    <Include file="Inputs.xml"/>
+    <Include file="Simulation.xml"/>
+
+
+    <izhikevich2007Cell id="RS" v0 = "-60mV" C="100 pF" k = "0.7 nS_per_mV"
+                    vr = "-60 mV" vt = "-40 mV" vpeak = "35 mV" 
+                    a = "0.03 per_ms" b = "-2 nS" c = "-50 mV" d = "100 pA"/>
+
+    <expTwoSynapse id="syn1" gbase="1nS" erev="20mV" tauRise="0.1ms" tauDecay="1ms"/>
+
+    <spikeGenerator id="spikeGenRegular" period="50 ms"/>
+
+    <spikeGeneratorRandom id="spikeGenRandom" minISI="30 ms"
+                          maxISI="50 ms"/>
+
+    <spikeGeneratorPoisson id="spikeGenPoisson" averageRate="50 Hz"/>
+
+    <network id="net1">
+        <population id="izhPop" component="RS" size="4"/>
+
+        <population id="spikeGenRegularPop" component="spikeGenRegular" size="1"/>
+        <population id="spikeGenPoissonPop" component="spikeGenPoisson" size="1"/>
+        <population id="spikeGenRandomPop" component="spikeGenRandom" size="1"/>
+
+    
+        <synapticConnection from="spikeGenRegularPop[0]" to="izhPop[0]" synapse="syn1" destination="synapses"/>
+        <synapticConnection from="spikeGenRandomPop[0]" to="izhPop[1]" synapse="syn1" destination="synapses"/>
+        <synapticConnection from="spikeGenPoissonPop[0]" to="izhPop[2]" synapse="syn1" destination="synapses"/>
+    </network>
+
+    <!-- End of NeuroML2 content -->
+        
+
+    <Simulation id="sim1" length="300ms" step="0.01ms" target="net1" seed="123"> <!-- Note seed: ensures same random numbers used every run -->
+
+    
+        <Display id="d40" title="Ex16: Izhikevich cell, spiking inputs, time since spikes" timeScale="1ms" xmin="-20" xmax="320" ymin="-5" ymax="45">
+            <Line id ="Regular spike gen t since" quantity="spikeGenRegularPop[0]/tsince" scale="1ms"  color="#3fffaa" timeScale="1ms"/>
+            <Line id ="Poisson spike gen t since" quantity="spikeGenRandomPop[0]/tsince" scale="1ms"  color="#3ff9999" timeScale="1ms"/>
+        </Display>
+    
+        <Display id="d4" title="Ex16: Izhikevich cell, spiking inputs" timeScale="1ms" xmin="-20" xmax="320" ymin="-61" ymax="-56">
+ 
+            <Line id="regular spike gen" quantity="izhPop[0]/v" scale="1mV"
+            color="#80FF00" timeScale="1ms"/>
+            <Line id="random (uniform) spike gen" quantity="izhPop[1]/v" scale="1mV"
+            color="#01A9DB" timeScale="1ms"/>
+            <Line id="poisson spike gen" quantity="izhPop[2]/v" scale="1mV"
+            color="#8000FF" timeScale="1ms"/>
+        </Display>
+    
+    
+        <OutputFile id="of0" fileName="inputs.dat">
+            <OutputColumn id="v0" quantity="izhPop[0]/v" />
+            <OutputColumn id="v1" quantity="izhPop[1]/v" />
+            <OutputColumn id="v2" quantity="izhPop[2]/v" />
+            <OutputColumn id="v3" quantity="izhPop[3]/v" /><!--
+            <OutputColumn id="v4" quantity="izhPop[4]/v" />
+            <OutputColumn id="v5" quantity="izhPop[5]/v" />
+            <OutputColumn id="v6" quantity="izhPop[6]/v" />
+            <OutputColumn id="v7" quantity="izhPop[7]/v" />
+            <OutputColumn id="v8" quantity="izhPop[8]/v" />
+            <OutputColumn id="v9" quantity="izhPop[9]/v" />-->
+        </OutputFile>
+
+    </Simulation>
+
+</Lems>

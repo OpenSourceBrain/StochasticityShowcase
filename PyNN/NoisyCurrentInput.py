@@ -2,7 +2,7 @@
 Simple test of injecting noisy current into a cell
 
 """
-
+import sys
 from pyNN.utility import get_script_args, normalized_filename
 
 simulator_name = get_script_args(1)[0]
@@ -18,18 +18,20 @@ filename = normalized_filename("Results", "StepCurrentSource", "pkl", simulator_
 record('v', cell, filename, annotations={'script_name': __file__})
 run(500.0)
 
-import matplotlib.pyplot as plt
-plt.ion()
-data = cell.get_data()
-signal_names = [s.name for s in data.segments[0].analogsignalarrays]
-vm = data.segments[0].analogsignalarrays[signal_names.index('v')]
-plt.plot(vm.times, vm)
-plt.xlabel("time (ms)")
-plt.ylabel("Vm (mV)")
+if not '-nogui' in sys.argv:
+    
+    import matplotlib.pyplot as plt
+    plt.ion()
+    data = cell.get_data()
+    signal_names = [s.name for s in data.segments[0].analogsignalarrays]
+    vm = data.segments[0].analogsignalarrays[signal_names.index('v')]
+    plt.plot(vm.times, vm)
+    plt.xlabel("time (ms)")
+    plt.ylabel("Vm (mV)")
 
-plt.legend()
+    plt.legend()
 
-plt.show()
+    plt.show()
 
 
 end()
