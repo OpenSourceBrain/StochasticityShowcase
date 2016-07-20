@@ -19,10 +19,10 @@
 
     <spikeGenerator id="spikeGenRegular" period="50 ms"/>
 
-    <spikeGeneratorRandom id="spikeGenRandom" minISI="30 ms"
-                          maxISI="50 ms"/>
+    <spikeGeneratorRandom id="spikeGenRandom" minISI="45 ms"
+                          maxISI="55 ms"/>
 
-    <spikeGeneratorPoisson id="spikeGenPoisson" averageRate="50 Hz"/>
+    <spikeGeneratorPoisson id="spikeGenPoisson" averageRate="20 Hz"/>
 
     <network id="net1">
         <population id="izhPop" component="RS" size="4"/>
@@ -40,7 +40,7 @@
     <!-- End of NeuroML2 content -->
         
 
-    <Simulation id="sim1" length="300ms" step="0.01ms" target="net1" seed="123"> <!-- Note seed: ensures same random numbers used every run -->
+    <Simulation id="sim1" length="5000ms" step="0.01ms" target="net1" seed="1234"> <!-- Note seed: ensures same random numbers used every run -->
 
     
         <Display id="d40" title="Ex16: Izhikevich cell, spiking inputs, time since spikes" timeScale="1ms" xmin="-20" xmax="320" ymin="-5" ymax="45">
@@ -71,6 +71,19 @@
             <OutputColumn id="v8" quantity="izhPop[8]/v" />
             <OutputColumn id="v9" quantity="izhPop[9]/v" />-->
         </OutputFile>
+        
+        
+        <EventOutputFile id="spikes0" fileName="regular.spikes" format="ID_TIME">
+            <EventSelection id="0" select="spikeGenRegularPop[0]" eventPort="spike"/>
+        </EventOutputFile>
+        
+        <EventOutputFile id="spikes1" fileName="random.spikes" format="ID_TIME">
+            <EventSelection id="0" select="spikeGenRandomPop[0]" eventPort="spike"/>
+        </EventOutputFile>
+        
+        <EventOutputFile id="spikes2" fileName="poisson.spikes" format="ID_TIME">
+            <EventSelection id="0" select="spikeGenPoissonPop[0]" eventPort="spike"/>
+        </EventOutputFile>
 
     </Simulation>
 
