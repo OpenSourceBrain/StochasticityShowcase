@@ -1,0 +1,102 @@
+<Lems>
+   
+    
+    <!-- Specify which component to run -->
+    <Target component="simnet1"/>
+
+    <!-- Include core NeuroML2 ComponentType definitions -->
+    <Include file="PyNN.xml"/>
+    <Include file="Cells.xml"/>
+    <Include file="Networks.xml"/>
+    <Include file="Simulation.xml"/>
+    
+    
+    <ComponentType name="noisyCurrentSource" extends="basePointCurrent"
+                   description="..."> 
+                   
+        <Parameter name="delay" dimension="time" description="Delay before change in current. Current is zero  prior to this."/>
+        <Parameter name="duration" dimension="time" description="Duration for holding current at amplitude. Current is zero after delay + duration."/>
+        <Parameter name="mean" dimension="current" description="Amplitude of current pulse"/>
+
+        <!--TODO: remove! Only required as EventConnection is used in explicitInput to
+        connect inputs to cells. Events aren't passed! ... -->
+        <EventPort name="in" direction="in" description="Note this is not used here. Will be removed in future"/>
+
+        <Dynamics>
+
+            <StateVariable name="i" exposure="i" dimension="current"/>
+
+            <OnEvent port="in"><!--TODO: remove, see above...
+            <StateAssignment variable="i" value="0"/>-->
+            </OnEvent>
+
+            <OnCondition test="t .lt. delay">
+                <StateAssignment variable="i" value="0"/>
+            </OnCondition>
+
+            <OnCondition test="t .geq. delay .and. t .lt. duration + delay">
+                <StateAssignment variable="i" value="mean"/>
+            </OnCondition>
+
+            <OnCondition test="t .geq. duration + delay">
+                <StateAssignment variable="i" value="0"/>
+            </OnCondition>
+
+        </Dynamics>
+    </ComponentType>
+    
+    
+    <IF_curr_exp id="IF_curr_exp" cm="1.0" i_offset="0" tau_m="20.0" tau_refrac="5.0" 
+        tau_syn_E="0.5" tau_syn_I="0.5" v_init="-65" v_reset="-65.0" v_rest="-65.0" v_thresh="-55.0"/>
+    
+    
+    <pulseGenerator id="pulseGen0" delay="50ms" duration="400ms" amplitude="0.55 nA" />
+    
+    <noisyCurrentSource id="noisyCurrentSource1" delay="50ms" duration="400ms" mean="0.55 nA" />
+    
+    <network id="net1">
+        <population component="IF_curr_exp" id="Pop0" type="populationList"  size="3">
+            <instance id="0">
+                <location x="120" y="230" z="567"/>
+            </instance>
+            <instance id="1">
+                <location x="270" y="450" z="56"/>
+            </instance>
+            <instance id="2">
+                <location x="54" y="234" z="89"/>
+            </instance>
+            <instance id="3">
+                <location x="1" y="2" z="3"/>
+            </instance>
+        </population>
+        
+        
+        <inputList id="stimInput" component="pulseGen0" population="Pop0">
+            <input id="0" target="../Pop0/0/IF_curr_exp" destination="synapses"/>
+        </inputList>
+        
+        <inputList id="noisy1" component="noisyCurrentSource1" population="Pop0">
+            <input id="0" target="../Pop0/1/IF_curr_exp" destination="synapses"/>
+        </inputList>
+        
+    </network>
+   
+    <Simulation id="simnet1" length="500ms" step="0.05ms" target="net1">
+        
+        <Display id="display_voltages" title="Voltages" timeScale="1ms" xmin="-2.0" xmax="520.0" ymin="-68" ymax="-47">
+            <Line id="Pop0/0: Vm" quantity="Pop0/0/IF_curr_exp/v" scale="1mV" color="#0000ff" timeScale="1ms"/>
+            <Line id="Pop0/1: Vm" quantity="Pop0/1/IF_curr_exp/v" scale="1mV" color="#00ff00" timeScale="1ms"/>
+            <Line id="Pop0/2: Vm" quantity="Pop0/2/IF_curr_exp/v" scale="1mV" color="#ff0000" timeScale="1ms"/>
+            <Line id="Pop0/3: Vm" quantity="Pop0/3/IF_curr_exp/v" scale="1mV" color="#00ffff" timeScale="1ms"/>
+        </Display>
+        
+        <OutputFile id="Volts_file" fileName="v.dat">
+            <OutputColumn id="v0" quantity="Pop0/0/IF_curr_exp/v"/> 
+            <OutputColumn id="v1" quantity="Pop0/1/IF_curr_exp/v"/> 
+            <OutputColumn id="v2" quantity="Pop0/2/IF_curr_exp/v"/> 
+            <OutputColumn id="v3" quantity="Pop0/3/IF_curr_exp/v"/> 
+        </OutputFile>
+        
+    </Simulation>
+
+</Lems>
