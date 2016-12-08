@@ -13,10 +13,16 @@
     
     <ComponentType name="noisyCurrentSource" extends="basePointCurrent"
                    description="..."> 
+        <!-- 
+
+noise1 = NoisyCurrentSource(mean=mean, stdev=stdev, start=start, stop=stop, dt=1.0)
+        -->
                    
-        <Parameter name="delay" dimension="time" description="Delay before change in current. Current is zero  prior to this."/>
-        <Parameter name="duration" dimension="time" description="Duration for holding current at amplitude. Current is zero after delay + duration."/>
-        <Parameter name="mean" dimension="current" description="Amplitude of current pulse"/>
+        <Parameter name="start" dimension="time" description="..."/>
+        <Parameter name="stop" dimension="time" description="...."/>
+        <Parameter name="mean" dimension="current" description="..."/>
+        <Parameter name="stdev" dimension="current" description="..."/>
+        <Parameter name="dt" dimension="time" description="..."/>
 
         <!--TODO: remove! Only required as EventConnection is used in explicitInput to
         connect inputs to cells. Events aren't passed! ... -->
@@ -25,20 +31,22 @@
         <Dynamics>
 
             <StateVariable name="i" exposure="i" dimension="current"/>
+            <StateVariable name="t_update" dimension="time"/>
 
             <OnEvent port="in"><!--TODO: remove, see above...
             <StateAssignment variable="i" value="0"/>-->
             </OnEvent>
 
-            <OnCondition test="t .lt. delay">
+            <OnCondition test="t .lt. start">
                 <StateAssignment variable="i" value="0"/>
             </OnCondition>
 
-            <OnCondition test="t .geq. delay .and. t .lt. duration + delay">
-                <StateAssignment variable="i" value="mean"/>
+            <OnCondition test="t .geq. start .and. t .lt. stop .and. t .geq. t_update">
+                <StateAssignment variable="i" value="mean + (stdev*(2*random(1)-1))"/>
+                <StateAssignment variable="t_update" value="t+dt"/>
             </OnCondition>
 
-            <OnCondition test="t .geq. duration + delay">
+            <OnCondition test="t .geq. stop">
                 <StateAssignment variable="i" value="0"/>
             </OnCondition>
 
@@ -52,7 +60,9 @@
     
     <pulseGenerator id="pulseGen0" delay="50ms" duration="400ms" amplitude="0.55 nA" />
     
-    <noisyCurrentSource id="noisyCurrentSource1" delay="50ms" duration="400ms" mean="0.55 nA" />
+    <noisyCurrentSource id="noisyCurrentSource1" start="50ms" stop="450ms" mean="0.55 nA" stdev="0.1 nA" dt="1ms" />
+    <noisyCurrentSource id="noisyCurrentSource2" start="50ms" stop="450ms" mean="0.55 nA" stdev="0.1 nA" dt="5ms" />
+    <noisyCurrentSource id="noisyCurrentSource3" start="50ms" stop="450ms" mean="0.55 nA" stdev="0.1 nA" dt="10ms" />
     
     <network id="net1">
         <population component="IF_curr_exp" id="Pop0" type="populationList"  size="3">
@@ -79,6 +89,14 @@
             <input id="0" target="../Pop0/1/IF_curr_exp" destination="synapses"/>
         </inputList>
         
+        <inputList id="noisy2" component="noisyCurrentSource2" population="Pop0">
+            <input id="0" target="../Pop0/2/IF_curr_exp" destination="synapses"/>
+        </inputList>
+        
+        <inputList id="noisy3" component="noisyCurrentSource3" population="Pop0">
+            <input id="0" target="../Pop0/3/IF_curr_exp" destination="synapses"/>
+        </inputList>
+        
     </network>
    
     <Simulation id="simnet1" length="500ms" step="0.05ms" target="net1">
@@ -88,6 +106,13 @@
             <Line id="Pop0/1: Vm" quantity="Pop0/1/IF_curr_exp/v" scale="1mV" color="#00ff00" timeScale="1ms"/>
             <Line id="Pop0/2: Vm" quantity="Pop0/2/IF_curr_exp/v" scale="1mV" color="#ff0000" timeScale="1ms"/>
             <Line id="Pop0/3: Vm" quantity="Pop0/3/IF_curr_exp/v" scale="1mV" color="#00ffff" timeScale="1ms"/>
+        </Display>
+        
+        <Display id="display_currents" title="Voltages" timeScale="1ms" xmin="-2.0" xmax="520.0" ymin="-0.05" ymax="0.6">
+            <Line id="Pop0/0: i" quantity="Pop0/0/IF_curr_exp/pulseGen0/i" scale="1nA" color="#0000ff" timeScale="1ms"/>
+            <Line id="Pop0/1: i" quantity="Pop0/1/IF_curr_exp/noisyCurrentSource1/i" scale="1nA" color="#00ff00" timeScale="1ms"/>
+            <Line id="Pop0/2: i" quantity="Pop0/2/IF_curr_exp/noisyCurrentSource2/i" scale="1nA" color="#ff0000" timeScale="1ms"/>
+            <Line id="Pop0/3: i" quantity="Pop0/3/IF_curr_exp/noisyCurrentSource3/i" scale="1nA" color="#00ffff" timeScale="1ms"/>
         </Display>
         
         <OutputFile id="Volts_file" fileName="v.dat">
