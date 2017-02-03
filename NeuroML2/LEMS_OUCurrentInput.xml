@@ -59,11 +59,11 @@
         tau_syn_E="0.5" tau_syn_I="0.5" v_init="-65" v_reset="-65.0" v_rest="-65.0" v_thresh="-55.0"/>
     
     
-    <pulseGenerator id="pulseGen0" delay="50ms" duration="400ms" amplitude="0.55 nA" />
+    <pulseGenerator id="pulseGen0" delay="50ms" duration="400ms" amplitude="0.15 nA" />
     
-    <ouCurrentSource id="noisyCurrentSource1" start="50ms" stop="450ms" mean="0.55 nA" stdev="0.1 nA" tau="2 ms" dt="1ms" />
-    <ouCurrentSource id="noisyCurrentSource2" start="50ms" stop="450ms" mean="0.55 nA" stdev="0.1 nA" tau="10 ms" dt="1ms" />
-    <ouCurrentSource id="noisyCurrentSource3" start="50ms" stop="450ms" mean="0.55 nA" stdev="0.1 nA" tau="50 ms" dt="1ms" />
+    <ouCurrentSource id="noisyCurrentSource1" start="50ms" stop="450ms" mean="0.15 nA" stdev="0.1 nA" tau="2 ms" dt="1ms" />
+    <ouCurrentSource id="noisyCurrentSource2" start="50ms" stop="450ms" mean="0.15 nA" stdev="0.1 nA" tau="10 ms" dt="1ms" />
+    <ouCurrentSource id="noisyCurrentSource3" start="50ms" stop="450ms" mean="0.15 nA" stdev="0.1 nA" tau="50 ms" dt="1ms" />
     
     <network id="net1">
         <population component="IF_curr_exp" id="Pop0" type="populationList"  size="3">

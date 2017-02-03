@@ -58,11 +58,11 @@ noise1 = NoisyCurrentSource(mean=mean, stdev=stdev, start=start, stop=stop, dt=1
         tau_syn_E="0.5" tau_syn_I="0.5" v_init="-65" v_reset="-65.0" v_rest="-65.0" v_thresh="-55.0"/>
     
     
-    <pulseGenerator id="pulseGen0" delay="50ms" duration="400ms" amplitude="0.55 nA" />
+    <pulseGenerator id="pulseGen0" delay="50ms" duration="400ms" amplitude="0.15 nA" />
     
-    <noisyCurrentSource id="noisyCurrentSource1" start="50ms" stop="450ms" mean="0.55 nA" stdev="0.1 nA" dt="1ms" />
-    <noisyCurrentSource id="noisyCurrentSource2" start="50ms" stop="450ms" mean="0.55 nA" stdev="0.1 nA" dt="5ms" />
-    <noisyCurrentSource id="noisyCurrentSource3" start="50ms" stop="450ms" mean="0.55 nA" stdev="0.1 nA" dt="10ms" />
+    <noisyCurrentSource id="noisyCurrentSource1" start="50ms" stop="450ms" mean="0.15 nA" stdev="0.1 nA" dt="1ms" />
+    <noisyCurrentSource id="noisyCurrentSource2" start="50ms" stop="450ms" mean="0.15 nA" stdev="0.1 nA" dt="5ms" />
+    <noisyCurrentSource id="noisyCurrentSource3" start="50ms" stop="450ms" mean="0.15 nA" stdev="0.1 nA" dt="10ms" />
     
     <network id="net1">
         <population component="IF_curr_exp" id="Pop0" type="populationList"  size="3">
