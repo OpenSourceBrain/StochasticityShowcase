@@ -32,8 +32,9 @@
         <EventPort name="in" direction="in" description="Note this is not used here. Will be removed in future"/>
 
         <Dynamics>
-
             <StateVariable name="i" exposure="i" dimension="current"/>
+            <StateVariable name="i_step" exposure="i" dimension="current"/>
+            <StateVariable name="i_noise" exposure="i" dimension="current"/>
             <StateVariable name="di_dt" exposure="i" dimension="current_per_time"/>
             <StateVariable name="t_update" dimension="time"/>
 
@@ -43,16 +44,22 @@
 
             <OnCondition test="t .lt. start">
                 <StateAssignment variable="i" value="0"/>
+                <StateAssignment variable="i_step" value="0"/>
+                <StateAssignment variable="i_noise" value="0"/>
             </OnCondition>
 
             <OnCondition test="t .geq. start .and. t .lt. stop .and. t .geq. t_update">
-                <StateAssignment variable="di_dt" value="(mean-i)/tau + (stdev*(2*random(1)-1))"/>
-                <StateAssignment variable="i" value="i + dt*di_dt"/>
+                <StateAssignment variable="di_dt" value="(-i_noise)/tau + (stdev*(2*random(1)-1))"/>
+                <StateAssignment variable="i_noise" value="i_noise + dt*di_dt"/>
+                <StateAssignment variable="i_step" value="mean"/>
+                <StateAssignment variable="i" value="i_step + i_noise"/>
                 <StateAssignment variable="t_update" value="t+dt"/>
             </OnCondition>
 
             <OnCondition test="t .geq. stop">
                 <StateAssignment variable="i" value="0"/>
+                <StateAssignment variable="i_step" value="0"/>
+                <StateAssignment variable="i_noise" value="0"/>
             </OnCondition>
 
         </Dynamics>
