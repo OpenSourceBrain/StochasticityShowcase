@@ -11,3 +11,5 @@ NeuroML2/*dat
 /NeuroML2/poisson.spikes
 /NeuroML2/random.spikes
 /NeuroML2/regular.spikes
+
+.ipynb_checkpoints

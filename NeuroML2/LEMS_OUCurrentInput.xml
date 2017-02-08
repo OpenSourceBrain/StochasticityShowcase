@@ -9,19 +9,22 @@
     <Include file="Cells.xml"/>
     <Include file="Networks.xml"/>
     <Include file="Simulation.xml"/>
+    <Dimension name="current_per_time" i="1" t="-1" />  
+    <Unit symbol="nA_per_ms" dimension="current_per_time" power="-6" />  
+
     
-    
-    <ComponentType name="noisyCurrentSource" extends="basePointCurrent"
+    <ComponentType name="ouCurrentSource" extends="basePointCurrent"
                    description="..."> 
         <!-- 
 
-noise1 = NoisyCurrentSource(mean=mean, stdev=stdev, start=start, stop=stop, dt=1.0)
+        An Ornstein-Uhlenbeck current source.
         -->
                    
         <Parameter name="start" dimension="time" description="..."/>
         <Parameter name="stop" dimension="time" description="...."/>
         <Parameter name="mean" dimension="current" description="..."/>
-        <Parameter name="stdev" dimension="current" description="..."/>
+        <Parameter name="stdev" dimension="current_per_time" description="..."/>
+        <Parameter name="tau" dimension="time" description="..."/>
         <Parameter name="dt" dimension="time" description="..."/>
 
         <!--TODO: remove! Only required as EventConnection is used in explicitInput to
@@ -29,8 +32,10 @@ noise1 = NoisyCurrentSource(mean=mean, stdev=stdev, start=start, stop=stop, dt=1
         <EventPort name="in" direction="in" description="Note this is not used here. Will be removed in future"/>
 
         <Dynamics>
-
             <StateVariable name="i" exposure="i" dimension="current"/>
+            <StateVariable name="i_step" exposure="i" dimension="current"/>
+            <StateVariable name="i_noise" exposure="i" dimension="current"/>
+            <StateVariable name="di_dt" exposure="i" dimension="current_per_time"/>
             <StateVariable name="t_update" dimension="time"/>
 
             <OnEvent port="in"><!--TODO: remove, see above...
@@ -39,15 +44,22 @@ noise1 = NoisyCurrentSource(mean=mean, stdev=stdev, start=start, stop=stop, dt=1
 
             <OnCondition test="t .lt. start">
                 <StateAssignment variable="i" value="0"/>
+                <StateAssignment variable="i_step" value="0"/>
+                <StateAssignment variable="i_noise" value="0"/>
             </OnCondition>
 
             <OnCondition test="t .geq. start .and. t .lt. stop .and. t .geq. t_update">
-                <StateAssignment variable="i" value="mean + (stdev*(2*random(1)-1))"/>
+                <StateAssignment variable="di_dt" value="(-i_noise)/tau + (stdev*(2*random(1)-1))"/>
+                <StateAssignment variable="i_noise" value="i_noise + dt*di_dt"/>
+                <StateAssignment variable="i_step" value="mean"/>
+                <StateAssignment variable="i" value="i_step + i_noise"/>
                 <StateAssignment variable="t_update" value="t+dt"/>
             </OnCondition>
 
             <OnCondition test="t .geq. stop">
                 <StateAssignment variable="i" value="0"/>
+                <StateAssignment variable="i_step" value="0"/>
+                <StateAssignment variable="i_noise" value="0"/>
             </OnCondition>
 
         </Dynamics>
@@ -60,9 +72,9 @@ noise1 = NoisyCurrentSource(mean=mean, stdev=stdev, start=start, stop=stop, dt=1
     
     <pulseGenerator id="pulseGen0" delay="50ms" duration="400ms" amplitude="0.15 nA" />
     
-    <noisyCurrentSource id="noisyCurrentSource1" start="50ms" stop="450ms" mean="0.15 nA" stdev="0.1 nA" dt="1ms" />
-    <noisyCurrentSource id="noisyCurrentSource2" start="50ms" stop="450ms" mean="0.15 nA" stdev="0.1 nA" dt="5ms" />
-    <noisyCurrentSource id="noisyCurrentSource3" start="50ms" stop="450ms" mean="0.15 nA" stdev="0.1 nA" dt="10ms" />
+    <ouCurrentSource id="noisyCurrentSource1" start="50ms" stop="450ms" mean="0.15 nA" stdev="0.01 nA_per_ms" tau="1 ms" dt="1ms" />
+    <ouCurrentSource id="noisyCurrentSource2" start="50ms" stop="450ms" mean="0.15 nA" stdev="0.01 nA_per_ms" tau="5 ms" dt="1ms" />
+    <ouCurrentSource id="noisyCurrentSource3" start="50ms" stop="450ms" mean="0.15 nA" stdev="0.01 nA_per_ms" tau="25 ms" dt="1ms" />
     
     <network id="net1">
         <population component="IF_curr_exp" id="Pop0" type="populationList"  size="3">
