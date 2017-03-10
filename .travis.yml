@@ -37,3 +37,9 @@ install:
 script:
     - omv all -V
 
+    - if [[ ${OMV_ENGINE} == "jNeuroML" ]]; then echo "Continuing with test after jNeuroML is run..."; else exit $OMV_SUCCESS; fi
+    - echo "Running more tests..."
+    - cd NeuroML2
+    - ls -alt
+    - python spikes.py
+
