@@ -14,3 +14,5 @@ NeuroML2/*dat
 
 .ipynb_checkpoints
 /NeuroML2/pynn.spikes
+/NeuroML2/pois.syn.fire
+/NeuroML2/trans.pois.syn.fire

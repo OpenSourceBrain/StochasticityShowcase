@@ -29,7 +29,7 @@
     
     <poissonFiringSynapse id="poissonFiringSyn" averageRate="50 Hz" synapse="syn1" spikeTarget="./syn1"/>
     
-    <transientPoissonFiringSynapse id="transPoissonFiringSyn2" delay="0ms" duration="50s" averageRate="50 Hz" synapse="syn1" spikeTarget="./syn1"/>
+    <transientPoissonFiringSynapse id="transPoissonFiringSyn" delay="0ms" duration="50s" averageRate="50 Hz" synapse="syn1" spikeTarget="./syn1"/>
 
 
     <network id="net1">
@@ -46,12 +46,16 @@
         <synapticConnection from="spikeGenPoissonPop[0]" to="izhPop[2]" synapse="syn1" destination="synapses"/>
         <synapticConnection from="spikeSourcePoissonPop[0]" to="izhPop[3]" synapse="syn1" destination="synapses"/>
         
+        
+        <explicitInput target="izhPop[4]" input="poissonFiringSyn" destination="synapses"/>
+        <explicitInput target="izhPop[5]" input="transPoissonFiringSyn" destination="synapses"/>
+        
     </network>
 
     <!-- End of NeuroML2 content -->
         
 
-    <Simulation id="sim1" length="10000ms" step="0.01ms" target="net1" seed="1234567"> <!-- Note seed: ensures same random numbers used every run -->
+    <Simulation id="sim1" length="20000ms" step="0.01ms" target="net1" seed="12345"> <!-- Note seed: ensures same random numbers used every run -->
 
     
         <Display id="d40" title="Ex16: Izhikevich cell, spiking inputs, time since spikes" timeScale="1ms" xmin="-500" xmax="10500" ymin="-5" ymax="45">
@@ -71,6 +75,12 @@
             color="#8000FF" timeScale="1ms"/>
             <Line id="pynn spike gen" quantity="izhPop[3]/v" scale="1mV"
             color="#8066FF" timeScale="1ms"/>
+            
+            <Line id="poisson firing syn" quantity="izhPop[4]/v" scale="1mV"
+            color="#806ccc" timeScale="1ms"/>
+            
+            <Line id="trans poisson firing syn" quantity="izhPop[5]/v" scale="1mV"
+            color="#ccc6FF" timeScale="1ms"/>
         </Display>
     
     
@@ -102,6 +112,14 @@
         
         <EventOutputFile id="spikes3" fileName="pynn.spikes" format="ID_TIME">
             <EventSelection id="0" select="spikeSourcePoissonPop[0]" eventPort="spike"/>
+        </EventOutputFile>
+        
+        <EventOutputFile id="spikes4" fileName="pois.syn.fire" format="ID_TIME">
+            <EventSelection id="0" select="izhPop[4]/poissonFiringSyn" eventPort="spike"/>
+        </EventOutputFile>
+        
+        <EventOutputFile id="spikes5" fileName="trans.pois.syn.fire" format="ID_TIME">
+            <EventSelection id="0" select="izhPop[5]/transPoissonFiringSyn" eventPort="spike"/>
         </EventOutputFile>
 
     </Simulation>
