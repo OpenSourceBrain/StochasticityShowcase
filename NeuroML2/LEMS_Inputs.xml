@@ -88,13 +88,7 @@
             <OutputColumn id="v0" quantity="izhPop[0]/v" />
             <OutputColumn id="v1" quantity="izhPop[1]/v" />
             <OutputColumn id="v2" quantity="izhPop[2]/v" />
-            <OutputColumn id="v3" quantity="izhPop[3]/v" /><!--
-            <OutputColumn id="v4" quantity="izhPop[4]/v" />
-            <OutputColumn id="v5" quantity="izhPop[5]/v" />
-            <OutputColumn id="v6" quantity="izhPop[6]/v" />
-            <OutputColumn id="v7" quantity="izhPop[7]/v" />
-            <OutputColumn id="v8" quantity="izhPop[8]/v" />
-            <OutputColumn id="v9" quantity="izhPop[9]/v" />-->
+            <OutputColumn id="v3" quantity="izhPop[3]/v" />
         </OutputFile>
         
         

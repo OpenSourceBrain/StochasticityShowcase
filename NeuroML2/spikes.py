@@ -1,5 +1,6 @@
 
 import numpy as np
+import sys
 
 files = ['regular.spikes','random.spikes','poisson.spikes','pynn.spikes','pois.syn.fire','trans.pois.syn.fire']
 
@@ -23,10 +24,11 @@ for fn in files:
         
     print('\n--- Analysing: %s'%fn)
     
-    avg_rate = 1000/(tstop/len(spikes))
+    avg_rate = len(spikes)*1000.0/tstop
     std_isi = np.std(isis)
     print("Num spikes: %s; avg rate: %s Hz; avg isi: %s ms; std isi: %s ms"%(len(spikes),avg_rate,np.average(isis),std_isi))
-    assert abs(avg_rate-expected_avg_rate) <= 1
-    if 'pois' in fn or 'pynn' in fn:
-        assert abs(std_isi-expected_std_isi) <= 1
+    if not '-info' in sys.argv:
+        assert abs(avg_rate-expected_avg_rate) <= 1
+        if 'pois' in fn or 'pynn' in fn:
+            assert abs(std_isi-expected_std_isi) <= 1
         
