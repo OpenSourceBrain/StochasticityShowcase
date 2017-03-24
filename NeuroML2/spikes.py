@@ -37,4 +37,6 @@ for fn in files:
             assert abs(avg_rate-expected_avg_rate) <= 3
             if 'pois' in fn or 'pynn' in fn:
                 assert abs(std_isi-expected_std_isi) <= 3
+                
+print("All passed!")
         
