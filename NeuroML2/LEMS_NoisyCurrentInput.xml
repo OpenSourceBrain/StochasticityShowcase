@@ -10,7 +10,21 @@
     <Include file="Networks.xml"/>
     <Include file="Simulation.xml"/>
     
-    
+   <ComponentType name="NormalDeviate">
+	<Exposure name="randn" dimension="none" />
+
+	<Dynamics>
+	   <StateVariable name="U" dimension="none"/>
+	   <StateVariable name="V" dimension="none"/>
+	   <StateAssignment variable="U" value="random(1)"/>
+	   <StateAssignment variable="V" value="random(1)"/>
+
+   	   <DerivedVariable name="randn" exposure="randn" value="sqrt(-2*ln(U))*cos(2*3.14*V)"/>
+	</Dynamics>
+
+   </ComponentType>
+
+
     <ComponentType name="noisyCurrentSource" extends="basePointCurrent"
                    description="NeuroML implementation of PyNN's NoisyCurrentSource: a Gaussian 'white' noise current source. The current amplitude changes at fixed
     intervals, with the new value drawn from a Gaussian distribution.">
@@ -22,27 +36,32 @@
         <Parameter name="dt" dimension="time" description="Interval between updates of the current amplitude. Must be a
             multiple of the simulation time step. If not specified, the simulation time step will be used."/>
 
+
         <EventPort name="in" direction="in" description="Note this is not used here. Will be removed in future"/>
 
         <Dynamics>
 
-            <OnEvent port="in"><!--TODO: remove, see above...
-            <StateAssignment variable="i" value="0"/>-->
-            </OnEvent>
-
             <StateVariable name="i" exposure="i" dimension="current"/>
-
             <StateVariable name="tsince" dimension="time"/>
             <TimeDerivative variable="tsince" value="1"/>
 
+
+	    <StateVariable name="U" dimension="none"/>
+	    <StateVariable name="V" dimension="none"/>
+	    <StateVariable name="rndn" dimension="none"/>
+	    
             <OnCondition test="t .lt. delay-dt">
                 <StateAssignment variable="i" value="0"/>
                 <StateAssignment variable="tsince" value="0"/>
             </OnCondition>
 
             <OnCondition test="tsince .geq. dt">
-                <StateAssignment variable="i" value="mean+stdev*random(1)"/>
-                <StateAssignment variable="tsince" value="0"/>
+		<StateAssignment variable="U" value="random(1)"/>
+		<StateAssignment variable="V" value="random(1)"/>
+	   	<StateAssignment variable="rndn" value="sqrt(-2*ln(U))*cos(2*3.14*V)"/>
+		
+		<StateAssignment variable="i" value="mean+stdev*rndn"/>
+		<StateAssignment variable="tsince" value="0"/>
             </OnCondition>
 
             <OnCondition test="t .geq. duration + delay">
@@ -63,7 +82,7 @@
 
     <pulseGenerator id="pulseGen0" delay="50ms" duration="400ms" amplitude="0.55 nA" />
     
-    <noisyCurrentSource id="noisyCurrentSource1" delay="50ms" duration="400ms" mean="0.55 nA" stdev="1.0 nA" dt="1.0ms"/>
+    <noisyCurrentSource id="noisyCurrentSource1" delay="50ms" duration="400ms" mean="0.55 nA" stdev="0.1 nA" dt="5.0ms"/>
 
     <network id="net1">
         <population component="IF_curr_exp" id="Pop0" type="populationList"  size="3">
@@ -108,11 +127,18 @@
             <Line id="Pop0/3: Vm" quantity="Pop0/3/IF_curr_exp/v" scale="1mV" color="#00ffff" timeScale="1ms"/>
             -->
         </Display>
+
         <OutputFile id="Volts_file" fileName="v.dat">
             <OutputColumn id="v0" quantity="Pop0/0/IF_curr_exp/v"/> 
             <OutputColumn id="v1" quantity="Pop0/1/IF_curr_exp/v"/> 
             <OutputColumn id="v2" quantity="Pop0/2/IF_curr_exp/v"/> 
             <OutputColumn id="v3" quantity="Pop0/3/IF_curr_exp/v"/> 
         </OutputFile>
+
+        <OutputFile id="Currents_file" fileName="i.dat">
+            <OutputColumn id="i0" quantity="Pop0/0/IF_curr_exp/pulseGen0/i"/>
+            <OutputColumn id="i1" quantity="Pop0/1/IF_curr_exp/noisyCurrentSource1/i"/>
+        </OutputFile>
+
     </Simulation>
 </Lems>
