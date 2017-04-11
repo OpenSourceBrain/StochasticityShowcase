@@ -1,5 +1,7 @@
 <Lems>
 
+    <!-- This is a test file with a longer runtime to generate data to look at the 
+         statistics of the input currents -->
 
     <!-- Specify which component to run -->
     <Target component="simnet1"/>
@@ -12,15 +14,18 @@
     
     <Include file="NoisyCurrentSource.xml"/>
 
+
+
+
     <IF_curr_exp id="IF_curr_exp" cm="1.0" i_offset="0" tau_m="20.0" tau_refrac="5.0"
                  tau_syn_E="0.5" tau_syn_I="0.5" v_init="-65" v_reset="-65.0" v_rest="-65.0" v_thresh="-55.0"/>
 
 
-    <pulseGenerator id="pulseGen0" delay="50ms" duration="400ms" amplitude="0.55 nA" />
+    <pulseGenerator id="pulseGen0" delay="0ms" duration="30000ms" amplitude="0.55 nA" />
 
-    <noisyCurrentSource id="noisyCurrentSource1" delay="50ms" duration="400ms" mean="0.25 nA" stdev="0.1 nA" dt="1.0ms"/>
-    <noisyCurrentSource id="noisyCurrentSource2" delay="50ms" duration="400ms" mean="0.35 nA" stdev="0.2 nA" dt="2.0ms"/>
-    <noisyCurrentSource id="noisyCurrentSource3" delay="50ms" duration="400ms" mean="0.15 nA" stdev="0.05 nA" dt="5.0ms"/>
+    <noisyCurrentSource id="noisyCurrentSource1" delay="0ms" duration="30000ms" mean="0.25 nA" stdev="0.01 nA" dt="5.0ms"/>
+    <noisyCurrentSource id="noisyCurrentSource2" delay="0ms" duration="30000ms" mean="0.35 nA" stdev="0.02 nA" dt="2.0ms"/>
+    <noisyCurrentSource id="noisyCurrentSource3" delay="0ms" duration="30000ms" mean="0.15 nA" stdev="0.01 nA" dt="1.0ms"/>
 
     <network id="net1">
         <population component="IF_curr_exp" id="Pop0" type="populationList"  size="3">
@@ -56,16 +61,16 @@
     </network>
 
 
-    <Simulation id="simnet1" length="500ms" step="0.05ms" target="net1" seed="123">
+    <Simulation id="simnet1" length="30000ms" step="0.05ms" target="net1" seed="123">
 
-        <Display id="display_currents" title="Currents" timeScale="1ms" xmin="-20" xmax="520.0" ymin="-0.2" ymax="1.2">
+        <Display id="display_currents" title="Currents" timeScale="1ms" xmin="-20" xmax="30000" ymin="-0.2" ymax="1.2">
             <Line id="Pop0/0: i"  quantity="Pop0/0/IF_curr_exp/pulseGen0/i" scale="1nA" color="#0000ff" timeScale="1ms"/>
             <Line id="Pop0/1: i"  quantity="Pop0/1/IF_curr_exp/noisyCurrentSource1/i" scale="1nA" color="#00ff00" timeScale="1ms"/>
             <Line id="Pop0/2: i"  quantity="Pop0/2/IF_curr_exp/noisyCurrentSource2/i" scale="1nA" color="#ff0000" timeScale="1ms"/>
             <Line id="Pop0/3: i"  quantity="Pop0/3/IF_curr_exp/noisyCurrentSource3/i" scale="1nA" color="#00ffff" timeScale="1ms"/>
         </Display>
 
-        <Display id="display_voltages" title="Voltages" timeScale="1ms" xmin="-20" xmax="520.0" ymin="-68" ymax="-47">
+        <Display id="display_voltages" title="Voltages" timeScale="1ms" xmin="-20" xmax="30000" ymin="-68" ymax="-47">
             <Line id="Pop0/0: Vm" quantity="Pop0/0/IF_curr_exp/v" scale="1mV" color="#0000ff" timeScale="1ms"/>
             <Line id="Pop0/1: Vm" quantity="Pop0/1/IF_curr_exp/v" scale="1mV" color="#00ff00" timeScale="1ms"/>
             <Line id="Pop0/2: Vm" quantity="Pop0/2/IF_curr_exp/v" scale="1mV" color="#ff0000" timeScale="1ms"/>

@@ -1,0 +1,146 @@
+<Lems>
+   
+    
+    <!-- Specify which component to run -->
+    <Target component="simnet1"/>
+
+    <!-- Include core NeuroML2 ComponentType definitions -->
+    <Include file="PyNN.xml"/>
+    <Include file="Cells.xml"/>
+    <Include file="Networks.xml"/>
+    <Include file="Simulation.xml"/>
+    <Dimension name="current_per_time" i="1" t="-1" />  
+    <Unit symbol="nA_per_ms" dimension="current_per_time" power="-6" />  
+
+    
+    <ComponentType name="ouCurrentSource" extends="basePointCurrent"
+                   description="..."> 
+        <!-- 
+
+        An Ornstein-Uhlenbeck current source.
+        -->
+                   
+        <Parameter name="start" dimension="time" description="..."/>
+        <Parameter name="stop" dimension="time" description="...."/>
+        <Parameter name="mean" dimension="current" description="..."/>
+        <Parameter name="stdev" dimension="current_per_time" description="..."/>
+        <Parameter name="tau" dimension="time" description="..."/>
+        <Parameter name="dt" dimension="time" description="..."/>
+
+        <!--TODO: remove! Only required as EventConnection is used in explicitInput to
+        connect inputs to cells. Events aren't passed! ... -->
+        <EventPort name="in" direction="in" description="Note this is not used here. Will be removed in future"/>
+
+        <Dynamics>
+            <StateVariable name="i" exposure="i" dimension="current"/>
+            <StateVariable name="i_step" exposure="i" dimension="current"/>
+            <StateVariable name="i_noise" exposure="i" dimension="current"/>
+            <StateVariable name="di_dt" exposure="i" dimension="current_per_time"/>
+            <StateVariable name="t_update" dimension="time"/>
+
+            <OnEvent port="in"><!--TODO: remove, see above...
+            <StateAssignment variable="i" value="0"/>-->
+            </OnEvent>
+
+            <OnCondition test="t .lt. start">
+                <StateAssignment variable="i" value="0"/>
+                <StateAssignment variable="i_step" value="0"/>
+                <StateAssignment variable="i_noise" value="0"/>
+            </OnCondition>
+
+            <OnCondition test="t .geq. start .and. t .lt. stop .and. t .geq. t_update">
+                <StateAssignment variable="di_dt" value="(-i_noise)/tau + (stdev*(2*random(1)-1))"/>
+                <StateAssignment variable="i_noise" value="i_noise + dt*di_dt"/>
+                <StateAssignment variable="i_step" value="mean"/>
+                <StateAssignment variable="i" value="i_step + i_noise"/>
+                <StateAssignment variable="t_update" value="t+dt"/>
+            </OnCondition>
+
+            <OnCondition test="t .geq. stop">
+                <StateAssignment variable="i" value="0"/>
+                <StateAssignment variable="i_step" value="0"/>
+                <StateAssignment variable="i_noise" value="0"/>
+            </OnCondition>
+
+        </Dynamics>
+    </ComponentType>
+    
+    
+    <IF_curr_exp id="IF_curr_exp" cm="1.0" i_offset="0" tau_m="20.0" tau_refrac="5.0" 
+        tau_syn_E="0.5" tau_syn_I="0.5" v_init="-65" v_reset="-65.0" v_rest="-65.0" v_thresh="-55.0"/>
+    
+    
+    <pulseGenerator id="pulseGen0" delay="0ms" duration="30000ms" amplitude="0.15 nA" />
+    
+    <ouCurrentSource id="noisyCurrentSource1" start="0ms" stop="30000ms" mean="0.25 nA" stdev="0.01 nA_per_ms" tau="10 ms" dt="1ms" />
+    <ouCurrentSource id="noisyCurrentSource2" start="0ms" stop="30000ms" mean="0.35 nA" stdev="0.01 nA_per_ms" tau="5 ms" dt="1ms" />
+    <ouCurrentSource id="noisyCurrentSource3" start="0ms" stop="30000ms" mean="0.15 nA" stdev="0.01 nA_per_ms" tau="25 ms" dt="1ms" />
+    
+    <network id="net1">
+        <population component="IF_curr_exp" id="Pop0" type="populationList"  size="3">
+            <instance id="0">
+                <location x="120" y="230" z="567"/>
+            </instance>
+            <instance id="1">
+                <location x="270" y="450" z="56"/>
+            </instance>
+            <instance id="2">
+                <location x="54" y="234" z="89"/>
+            </instance>
+            <instance id="3">
+                <location x="1" y="2" z="3"/>
+            </instance>
+        </population>
+        
+        
+        <inputList id="stimInput" component="pulseGen0" population="Pop0">
+            <input id="0" target="../Pop0/0/IF_curr_exp" destination="synapses"/>
+        </inputList>
+        
+        <inputList id="noisy1" component="noisyCurrentSource1" population="Pop0">
+            <input id="0" target="../Pop0/1/IF_curr_exp" destination="synapses"/>
+        </inputList>
+        
+        <inputList id="noisy2" component="noisyCurrentSource2" population="Pop0">
+            <input id="0" target="../Pop0/2/IF_curr_exp" destination="synapses"/>
+        </inputList>
+        
+        <inputList id="noisy3" component="noisyCurrentSource3" population="Pop0">
+            <input id="0" target="../Pop0/3/IF_curr_exp" destination="synapses"/>
+        </inputList>
+        
+    </network>
+   
+    <Simulation id="simnet1" length="30000ms" step="0.05ms" target="net1">
+        
+        <Display id="display_voltages" title="Voltages" timeScale="1ms" xmin="-2.0" xmax="10020.0" ymin="-68" ymax="-47">
+            <Line id="Pop0/0: Vm" quantity="Pop0/0/IF_curr_exp/v" scale="1mV" color="#0000ff" timeScale="1ms"/>
+            <Line id="Pop0/1: Vm" quantity="Pop0/1/IF_curr_exp/v" scale="1mV" color="#00ff00" timeScale="1ms"/>
+            <Line id="Pop0/2: Vm" quantity="Pop0/2/IF_curr_exp/v" scale="1mV" color="#ff0000" timeScale="1ms"/>
+            <Line id="Pop0/3: Vm" quantity="Pop0/3/IF_curr_exp/v" scale="1mV" color="#00ffff" timeScale="1ms"/>
+        </Display>
+        
+        <Display id="display_currents" title="Voltages" timeScale="1ms" xmin="-2.0" xmax="10020.0" ymin="-0.05" ymax="0.6">
+            <Line id="Pop0/0: i" quantity="Pop0/0/IF_curr_exp/pulseGen0/i" scale="1nA" color="#0000ff" timeScale="1ms"/>
+            <Line id="Pop0/1: i" quantity="Pop0/1/IF_curr_exp/noisyCurrentSource1/i" scale="1nA" color="#00ff00" timeScale="1ms"/>
+            <Line id="Pop0/2: i" quantity="Pop0/2/IF_curr_exp/noisyCurrentSource2/i" scale="1nA" color="#ff0000" timeScale="1ms"/>
+            <Line id="Pop0/3: i" quantity="Pop0/3/IF_curr_exp/noisyCurrentSource3/i" scale="1nA" color="#00ffff" timeScale="1ms"/>
+        </Display>
+        
+        <OutputFile id="Volts_file" fileName="v_ou.dat">
+            <OutputColumn id="v0" quantity="Pop0/0/IF_curr_exp/v"/> 
+            <OutputColumn id="v1" quantity="Pop0/1/IF_curr_exp/v"/> 
+            <OutputColumn id="v2" quantity="Pop0/2/IF_curr_exp/v"/> 
+            <OutputColumn id="v3" quantity="Pop0/3/IF_curr_exp/v"/> 
+        </OutputFile>
+        
+        <OutputFile id="Currents_file" fileName="i_ou.dat">
+            <OutputColumn id="i0" quantity="Pop0/0/IF_curr_exp/pulseGen0/i"/>
+            <OutputColumn id="i1" quantity="Pop0/1/IF_curr_exp/noisyCurrentSource1/i"/>
+            <OutputColumn id="i2" quantity="Pop0/2/IF_curr_exp/noisyCurrentSource2/i"/>
+            <OutputColumn id="i3" quantity="Pop0/3/IF_curr_exp/noisyCurrentSource3/i"/>
+        </OutputFile>
+        
+    </Simulation>
+
+</Lems>
