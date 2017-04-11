@@ -19,8 +19,8 @@
         <Parameter name="duration" dimension="time" description="Duration for holding current at amplitude. Current is zero after delay + duration."/>
         <Parameter name="mean" dimension="current" description="Amplitude of current pulse"/>
         <Parameter name="stdev" dimension="current" description="Standard deviation of current pulse"/>
-        <Parameter name="dt" dimension="time" description="Interval between updates of the current amplitude. Must be a
-            multiple of the simulation time step. If not specified, the simulation time step will be used."/>
+        <Parameter name="dt" dimension="time" description="Interval between updates of the current amplitude. Should be a
+            multiple of the simulation time step. "/>
 
 
         <EventPort name="in" direction="in" description="Note this is not used here. Will be removed in future"/>
@@ -44,9 +44,10 @@
             <OnCondition test="tsince .geq. dt">
                 <StateAssignment variable="U" value="random(1)"/>
                 <StateAssignment variable="V" value="random(1)"/>
-                <StateAssignment variable="randn" value="sqrt(-2*ln(U))*cos(2*3.14*V)"/>
+                <StateAssignment variable="randn" value="sqrt(-2*ln(U))*cos(2*3.14159265359*V)"/>
 
                 <StateAssignment variable="i" value="mean+stdev*randn"/>
+                
                 <StateAssignment variable="tsince" value="0"/>
             </OnCondition>
 
@@ -61,14 +62,12 @@
     <IF_curr_exp id="IF_curr_exp" cm="1.0" i_offset="0" tau_m="20.0" tau_refrac="5.0"
                  tau_syn_E="0.5" tau_syn_I="0.5" v_init="-65" v_reset="-65.0" v_rest="-65.0" v_thresh="-55.0"/>
 
-    <!--
-    <IF_curr_exp id="IF_curr_exp" cm="1.0" i_offset="0" tau_m="10.0" tau_refrac="5.0"
-        tau_syn_E="5.0" tau_syn_I="5.0" v_init="-65" v_reset="-65.0" v_rest="-65.0" v_thresh="-55.0"/>
-    -->
 
     <pulseGenerator id="pulseGen0" delay="50ms" duration="400ms" amplitude="0.55 nA" />
 
     <noisyCurrentSource id="noisyCurrentSource1" delay="50ms" duration="400ms" mean="0.55 nA" stdev="0.1 nA" dt="5.0ms"/>
+    <noisyCurrentSource id="noisyCurrentSource2" delay="50ms" duration="400ms" mean="0.55 nA" stdev="0.2 nA" dt="2.0ms"/>
+    <noisyCurrentSource id="noisyCurrentSource3" delay="50ms" duration="400ms" mean="0.55 nA" stdev="0.05 nA" dt="1.0ms"/>
 
     <network id="net1">
         <population component="IF_curr_exp" id="Pop0" type="populationList"  size="3">
@@ -82,7 +81,7 @@
                 <location x="54" y="234" z="89"/>
             </instance>
             <instance id="3">
-                <location x="1" y="2" z="3"/>
+                <location x="154" y="1234" z="89"/>
             </instance>
         </population>
 
@@ -94,20 +93,30 @@
         <inputList id="noisy1" component="noisyCurrentSource1" population="Pop0">
             <input id="0" target="../Pop0/1/IF_curr_exp" destination="synapses"/>
         </inputList>
+        <inputList id="noisy2" component="noisyCurrentSource2" population="Pop0">
+            <input id="0" target="../Pop0/2/IF_curr_exp" destination="synapses"/>
+        </inputList>
+        <inputList id="noisy3" component="noisyCurrentSource3" population="Pop0">
+            <input id="0" target="../Pop0/3/IF_curr_exp" destination="synapses"/>
+        </inputList>
 
     </network>
 
 
     <Simulation id="simnet1" length="500ms" step="0.05ms" target="net1" seed="123">
 
-        <Display id="display_currents" title="Currents" timeScale="1ms" xmin="-2.0" xmax="520.0" ymin="-0.70" ymax="3.0">
+        <Display id="display_currents" title="Currents" timeScale="1ms" xmin="-20" xmax="520.0" ymin="-0.2" ymax="1.2">
             <Line id="Pop0/0: i"  quantity="Pop0/0/IF_curr_exp/pulseGen0/i" scale="1nA" color="#0000ff" timeScale="1ms"/>
             <Line id="Pop0/1: i"  quantity="Pop0/1/IF_curr_exp/noisyCurrentSource1/i" scale="1nA" color="#00ff00" timeScale="1ms"/>
+            <Line id="Pop0/2: i"  quantity="Pop0/2/IF_curr_exp/noisyCurrentSource2/i" scale="1nA" color="#ff0000" timeScale="1ms"/>
+            <Line id="Pop0/3: i"  quantity="Pop0/3/IF_curr_exp/noisyCurrentSource3/i" scale="1nA" color="#00ffff" timeScale="1ms"/>
         </Display>
 
-        <Display id="display_voltages" title="Voltages" timeScale="1ms" xmin="-2.0" xmax="520.0" ymin="-68" ymax="-47">
+        <Display id="display_voltages" title="Voltages" timeScale="1ms" xmin="-20" xmax="520.0" ymin="-68" ymax="-47">
             <Line id="Pop0/0: Vm" quantity="Pop0/0/IF_curr_exp/v" scale="1mV" color="#0000ff" timeScale="1ms"/>
             <Line id="Pop0/1: Vm" quantity="Pop0/1/IF_curr_exp/v" scale="1mV" color="#00ff00" timeScale="1ms"/>
+            <Line id="Pop0/2: Vm" quantity="Pop0/2/IF_curr_exp/v" scale="1mV" color="#ff0000" timeScale="1ms"/>
+            <Line id="Pop0/3: Vm" quantity="Pop0/3/IF_curr_exp/v" scale="1mV" color="#00ffff" timeScale="1ms"/>
             <!--
             <Line id="Pop0/2: Vm" quantity="Pop0/2/IF_curr_exp/v" scale="1mV" color="#ff0000" timeScale="1ms"/>
             <Line id="Pop0/3: Vm" quantity="Pop0/3/IF_curr_exp/v" scale="1mV" color="#00ffff" timeScale="1ms"/>
@@ -124,6 +133,8 @@
         <OutputFile id="Currents_file" fileName="i.dat">
             <OutputColumn id="i0" quantity="Pop0/0/IF_curr_exp/pulseGen0/i"/>
             <OutputColumn id="i1" quantity="Pop0/1/IF_curr_exp/noisyCurrentSource1/i"/>
+            <OutputColumn id="i2" quantity="Pop0/2/IF_curr_exp/noisyCurrentSource2/i"/>
+            <OutputColumn id="i3" quantity="Pop0/3/IF_curr_exp/noisyCurrentSource3/i"/>
         </OutputFile>
 
     </Simulation>
