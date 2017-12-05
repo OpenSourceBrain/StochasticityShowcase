@@ -23,9 +23,9 @@
 
     <pulseGenerator id="pulseGen0" delay="0ms" duration="30000ms" amplitude="0.55 nA" />
 
-    <noisyCurrentSource id="noisyCurrentSource1" delay="0ms" duration="30000ms" mean="0.25 nA" stdev="0.01 nA" dt="5.0ms"/>
-    <noisyCurrentSource id="noisyCurrentSource2" delay="0ms" duration="30000ms" mean="0.35 nA" stdev="0.02 nA" dt="2.0ms"/>
-    <noisyCurrentSource id="noisyCurrentSource3" delay="0ms" duration="30000ms" mean="0.15 nA" stdev="0.01 nA" dt="1.0ms"/>
+    <noisyCurrentSource id="noisyCurrentSource1" delay="0ms" duration="30000ms" mean="0.25 nA" stdev="0.01 nA" noiseDt="5.0ms"/>
+    <noisyCurrentSource id="noisyCurrentSource2" delay="0ms" duration="30000ms" mean="0.35 nA" stdev="0.02 nA" noiseDt="2.0ms"/>
+    <noisyCurrentSource id="noisyCurrentSource3" delay="0ms" duration="30000ms" mean="0.15 nA" stdev="0.01 nA" noiseDt="1.0ms"/>
 
     <network id="net1">
         <population component="IF_curr_exp" id="Pop0" type="populationList"  size="3">

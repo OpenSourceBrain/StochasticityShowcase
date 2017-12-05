@@ -1,6 +1,5 @@
 <Lems>
 
-
     <!-- Specify which component to run -->
     <Target component="simnet1"/>
 
@@ -15,15 +14,15 @@
     <IF_curr_exp id="IF_curr_exp" cm="1.0" i_offset="0" tau_m="20.0" tau_refrac="5.0"
                  tau_syn_E="0.5" tau_syn_I="0.5" v_init="-65" v_reset="-65.0" v_rest="-65.0" v_thresh="-55.0"/>
 
-
     <pulseGenerator id="pulseGen0" delay="50ms" duration="400ms" amplitude="0.55 nA" />
 
-    <noisyCurrentSource id="noisyCurrentSource1" delay="50ms" duration="400ms" mean="0.25 nA" stdev="0.1 nA" dt="1.0ms"/>
-    <noisyCurrentSource id="noisyCurrentSource2" delay="50ms" duration="400ms" mean="0.35 nA" stdev="0.2 nA" dt="2.0ms"/>
-    <noisyCurrentSource id="noisyCurrentSource3" delay="50ms" duration="400ms" mean="0.15 nA" stdev="0.05 nA" dt="5.0ms"/>
+    <noisyCurrentSource id="noisyCurrentSource1" delay="50ms" duration="400ms" mean="0.25 nA" stdev="0.1 nA" noiseDt="1.0ms"/>
+    <noisyCurrentSource id="noisyCurrentSource2" delay="50ms" duration="400ms" mean="0.35 nA" stdev="0.2 nA" noiseDt="2.0ms"/>
+    <noisyCurrentSource id="noisyCurrentSource3" delay="50ms" duration="400ms" mean="0.15 nA" stdev="0.05 nA" noiseDt="5.0ms"/>
+    <noisyCurrentSource id="noisyCurrentSource4" delay="50ms" duration="400ms" mean="0.55 nA" stdev="0.05 nA" noiseDt="1.0ms"/>
 
     <network id="net1">
-        <population component="IF_curr_exp" id="Pop0" type="populationList"  size="3">
+        <population component="IF_curr_exp" id="Pop0" type="populationList"  size="5">
             <instance id="0">
                 <location x="120" y="230" z="567"/>
             </instance>
@@ -36,8 +35,10 @@
             <instance id="3">
                 <location x="154" y="1234" z="89"/>
             </instance>
+            <instance id="4">
+                <location x="114" y="14" z="889"/>
+            </instance>
         </population>
-
 
         <inputList id="stimInput" component="pulseGen0" population="Pop0">
             <input id="0" target="../Pop0/0/IF_curr_exp" destination="synapses"/>
@@ -52,6 +53,9 @@
         <inputList id="noisy3" component="noisyCurrentSource3" population="Pop0">
             <input id="0" target="../Pop0/3/IF_curr_exp" destination="synapses"/>
         </inputList>
+        <inputList id="noisy4" component="noisyCurrentSource4" population="Pop0">
+            <input id="0" target="../Pop0/4/IF_curr_exp" destination="synapses"/>
+        </inputList>
 
     </network>
 
@@ -63,6 +67,7 @@
             <Line id="Pop0/1: i"  quantity="Pop0/1/IF_curr_exp/noisyCurrentSource1/i" scale="1nA" color="#00ff00" timeScale="1ms"/>
             <Line id="Pop0/2: i"  quantity="Pop0/2/IF_curr_exp/noisyCurrentSource2/i" scale="1nA" color="#ff0000" timeScale="1ms"/>
             <Line id="Pop0/3: i"  quantity="Pop0/3/IF_curr_exp/noisyCurrentSource3/i" scale="1nA" color="#00ffff" timeScale="1ms"/>
+            <Line id="Pop0/4: i"  quantity="Pop0/4/IF_curr_exp/noisyCurrentSource4/i" scale="1nA" color="#0aafff" timeScale="1ms"/>
         </Display>
 
         <Display id="display_voltages" title="Voltages" timeScale="1ms" xmin="-20" xmax="520.0" ymin="-68" ymax="-47">
@@ -70,10 +75,7 @@
             <Line id="Pop0/1: Vm" quantity="Pop0/1/IF_curr_exp/v" scale="1mV" color="#00ff00" timeScale="1ms"/>
             <Line id="Pop0/2: Vm" quantity="Pop0/2/IF_curr_exp/v" scale="1mV" color="#ff0000" timeScale="1ms"/>
             <Line id="Pop0/3: Vm" quantity="Pop0/3/IF_curr_exp/v" scale="1mV" color="#00ffff" timeScale="1ms"/>
-            <!--
-            <Line id="Pop0/2: Vm" quantity="Pop0/2/IF_curr_exp/v" scale="1mV" color="#ff0000" timeScale="1ms"/>
-            <Line id="Pop0/3: Vm" quantity="Pop0/3/IF_curr_exp/v" scale="1mV" color="#00ffff" timeScale="1ms"/>
-            -->
+            <Line id="Pop0/4: Vm" quantity="Pop0/4/IF_curr_exp/v" scale="1mV" color="#0aafff" timeScale="1ms"/>
         </Display>
 
         <OutputFile id="Volts_file" fileName="v.dat">
@@ -81,14 +83,17 @@
             <OutputColumn id="v1" quantity="Pop0/1/IF_curr_exp/v"/> 
             <OutputColumn id="v2" quantity="Pop0/2/IF_curr_exp/v"/> 
             <OutputColumn id="v3" quantity="Pop0/3/IF_curr_exp/v"/> 
+            <OutputColumn id="v4" quantity="Pop0/4/IF_curr_exp/v"/> 
         </OutputFile>
 
+        <!--
         <OutputFile id="Currents_file" fileName="i.dat">
             <OutputColumn id="i0" quantity="Pop0/0/IF_curr_exp/pulseGen0/i"/>
             <OutputColumn id="i1" quantity="Pop0/1/IF_curr_exp/noisyCurrentSource1/i"/>
             <OutputColumn id="i2" quantity="Pop0/2/IF_curr_exp/noisyCurrentSource2/i"/>
             <OutputColumn id="i3" quantity="Pop0/3/IF_curr_exp/noisyCurrentSource3/i"/>
-        </OutputFile>
+            <OutputColumn id="i4" quantity="Pop0/4/IF_curr_exp/noisyCurrentSource4/i"/>
+        </OutputFile>-->
 
     </Simulation>
 </Lems>
