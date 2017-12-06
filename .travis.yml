@@ -1,6 +1,7 @@
 # Framework for running automated tests on OSB using Travis-CI, see https://github.com/OpenSourceBrain/osb-model-validation
 
-sudo: false
+dist: trusty
+sudo: false 
 
 addons:
   apt:
@@ -14,6 +15,7 @@ addons:
     - libreadline6-dev 
     - libncurses5-dev 
     - libgsl0-dev
+    - cython
     
 language: python
 
