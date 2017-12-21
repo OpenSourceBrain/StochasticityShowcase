@@ -1,0 +1,68 @@
+<Lems>
+   
+    
+    <!-- Specify which component to run -->
+    <Target component="simnet1"/>
+
+    <!-- Include core NeuroML2 ComponentType definitions -->
+    <Include file="PyNN.xml"/>
+    <Include file="Cells.xml"/>
+    <Include file="Networks.xml"/>
+    <Include file="Simulation.xml"/>
+    <Dimension name="current_per_time" i="1" t="-1" />  
+    <Unit symbol="nA_per_ms" dimension="current_per_time" power="-6" />  
+
+    
+    <ComponentType name="ouCurrentSource" extends="basePointCurrent"
+                   description="..."> 
+        <!-- 
+
+        An Ornstein-Uhlenbeck current source.
+        -->
+                   
+        <Parameter name="start" dimension="time" description="..."/>
+        <Parameter name="stop" dimension="time" description="...."/>
+        <Parameter name="mean" dimension="current" description="..."/>
+        <Parameter name="stdev" dimension="current_per_time" description="..."/>
+        <Parameter name="tau" dimension="time" description="..."/>
+        <Parameter name="noiseDt" dimension="time" description="..."/>
+
+        <!--TODO: remove! Only required as EventConnection is used in explicitInput to
+        connect inputs to cells. Events aren't passed! ... -->
+        <EventPort name="in" direction="in" description="Note this is not used here. Will be removed in future"/>
+
+        <Dynamics>
+            <StateVariable name="i" exposure="i" dimension="current"/>
+            <StateVariable name="i_step" dimension="current"/>
+            <StateVariable name="i_noise" dimension="current"/>
+            <StateVariable name="di_dt" dimension="current_per_time"/>
+            <StateVariable name="t_update" dimension="time"/>
+
+            <OnEvent port="in"><!--TODO: remove, see above...
+            <StateAssignment variable="i" value="0"/>-->
+            </OnEvent>
+
+            <OnCondition test="t .lt. start">
+                <StateAssignment variable="i" value="0"/>
+                <StateAssignment variable="i_step" value="0"/>
+                <StateAssignment variable="i_noise" value="0"/>
+            </OnCondition>
+
+            <OnCondition test="t .geq. start .and. t .lt. stop .and. t .geq. t_update">
+                <StateAssignment variable="di_dt" value="(-i_noise)/tau + (stdev*(2*random(1)-1))"/>
+                <StateAssignment variable="i_noise" value="i_noise + noiseDt*di_dt"/>
+                <StateAssignment variable="i_step" value="mean"/>
+                <StateAssignment variable="i" value="i_step + i_noise"/>
+                <StateAssignment variable="t_update" value="t+noiseDt"/>
+            </OnCondition>
+
+            <OnCondition test="t .geq. stop">
+                <StateAssignment variable="i" value="0"/>
+                <StateAssignment variable="i_step" value="0"/>
+                <StateAssignment variable="i_noise" value="0"/>
+            </OnCondition>
+
+        </Dynamics>
+    </ComponentType>
+    
+</Lems>
