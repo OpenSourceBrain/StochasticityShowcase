@@ -25,6 +25,8 @@
 
     <spikeGeneratorPoisson id="spikeGenPoisson" averageRate="50 Hz"/>
     
+    <spikeGeneratorRefPoisson id="spikeGenRefPoisson" averageRate="50 Hz" minimumISI="10 ms"/>
+    
     <SpikeSourcePoisson id="spikeSourcePoisson1" start="0ms" duration="50s" rate="50Hz"/>
     
     <poissonFiringSynapse id="poissonFiringSyn" averageRate="50 Hz" synapse="syn1" spikeTarget="./syn1"/>
@@ -33,16 +35,18 @@
 
 
     <network id="net1">
-        <population id="izhPop" component="RS" size="6"/>
+        <population id="izhPop" component="RS" size="7"/>
 
         <population id="spikeGenRegularPop" component="spikeGenRegular" size="1"/>
         <population id="spikeGenPoissonPop" component="spikeGenPoisson" size="1"/>
+        <population id="spikeGenRefPoissonPop" component="spikeGenRefPoisson" size="1"/>
         <population id="spikeGenRandomPop" component="spikeGenRandom" size="1"/>
         <population id="spikeSourcePoissonPop" component="spikeSourcePoisson1" size="1"/>
 
     
         <synapticConnection from="spikeGenRegularPop[0]" to="izhPop[0]" synapse="syn1" destination="synapses"/>
         <synapticConnection from="spikeGenRandomPop[0]" to="izhPop[1]" synapse="syn1" destination="synapses"/>
+        <synapticConnection from="spikeGenRefPoissonPop[0]" to="izhPop[6]" synapse="syn1" destination="synapses"/>
         <synapticConnection from="spikeGenPoissonPop[0]" to="izhPop[2]" synapse="syn1" destination="synapses"/>
         <synapticConnection from="spikeSourcePoissonPop[0]" to="izhPop[3]" synapse="syn1" destination="synapses"/>
         
@@ -58,14 +62,15 @@
     <Simulation id="sim1" length="20000ms" step="0.01ms" target="net1" seed="1234567"> <!-- Note seed: ensures same random numbers used every run -->
 
     
-        <Display id="d40" title="Ex16: Izhikevich cell, spiking inputs, time since spikes" timeScale="1ms" xmin="-500" xmax="10500" ymin="-5" ymax="45">
+        <Display id="d40" title="Ex16: Izhikevich cell, spiking inputs, time since spikes" timeScale="1ms" xmin="-500" xmax="20500" ymin="-5" ymax="45">
             <Line id ="Regular spike gen t since" quantity="spikeGenRegularPop[0]/tsince" scale="1ms"  color="#3fffaa" timeScale="1ms"/>
             <Line id ="Random spike gen t since" quantity="spikeGenRandomPop[0]/tsince" scale="1ms"  color="#3ff9999" timeScale="1ms"/>
+            <Line id ="Random spike gen ref t since" quantity="spikeGenRefPoissonPop[0]/tsince" scale="1ms"  color="#0000ff" timeScale="1ms"/>
             <Line id ="Poisson spike gen t since" quantity="spikeGenPoissonPop[0]/tsince" scale="1ms"  color="#3f0009" timeScale="1ms"/>
             <Line id ="PyNN spike gen t since" quantity="spikeSourcePoissonPop[0]/tsince" scale="1ms"  color="#aa0009" timeScale="1ms"/>
         </Display>
     
-        <Display id="d4" title="Ex16: Izhikevich cell, spiking inputs" timeScale="1ms" xmin="-500" xmax="10500" ymin="-61" ymax="-56">
+        <Display id="d4" title="Ex16: Izhikevich cell, spiking inputs" timeScale="1ms" xmin="-500" xmax="20500" ymin="-61" ymax="-56">
  
             <Line id="regular spike gen" quantity="izhPop[0]/v" scale="1mV"
             color="#80FF00" timeScale="1ms"/>
@@ -73,6 +78,8 @@
             color="#01A9DB" timeScale="1ms"/>
             <Line id="poisson spike gen" quantity="izhPop[2]/v" scale="1mV"
             color="#8000FF" timeScale="1ms"/>
+            <Line id="poisson ref spike gen" quantity="izhPop[6]/v" scale="1mV"
+            color="#a00aaF" timeScale="1ms"/>
             <Line id="pynn spike gen" quantity="izhPop[3]/v" scale="1mV"
             color="#8066FF" timeScale="1ms"/>
             
@@ -89,6 +96,15 @@
             <OutputColumn id="v1" quantity="izhPop[1]/v" />
             <OutputColumn id="v2" quantity="izhPop[2]/v" />
             <OutputColumn id="v3" quantity="izhPop[3]/v" />
+            <OutputColumn id="v6" quantity="izhPop[6]/v" />
+        </OutputFile>
+    
+        <OutputFile id="of1" fileName="timesince.dat">
+            <OutputColumn id="t0" quantity="spikeGenRegularPop[0]/tsince" />
+            <OutputColumn id="t1" quantity="spikeGenRandomPop[0]/tsince" />
+            <OutputColumn id="t2" quantity="spikeGenRefPoissonPop[0]/tsince" />
+            <OutputColumn id="t3" quantity="spikeGenPoissonPop[0]/tsince" />
+            <OutputColumn id="t4" quantity="spikeSourcePoissonPop[0]/tsince" />
         </OutputFile>
         
         
@@ -102,6 +118,10 @@
         
         <EventOutputFile id="spikes2" fileName="poisson.spikes" format="ID_TIME">
             <EventSelection id="0" select="spikeGenPoissonPop[0]" eventPort="spike"/>
+        </EventOutputFile>
+        
+        <EventOutputFile id="spikes2a" fileName="refpoisson.spikes" format="ID_TIME">
+            <EventSelection id="0" select="spikeGenRefPoissonPop[0]" eventPort="spike"/>
         </EventOutputFile>
         
         <EventOutputFile id="spikes3" fileName="pynn.spikes" format="ID_TIME">

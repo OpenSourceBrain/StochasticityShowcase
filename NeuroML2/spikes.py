@@ -2,7 +2,7 @@
 import numpy as np
 import sys
 
-files = ['regular.spikes','random.spikes','poisson.spikes','pynn.spikes','pois.syn.fire','trans.pois.syn.fire']
+files = ['regular.spikes','random.spikes','poisson.spikes','refpoisson.spikes','pynn.spikes','pois.syn.fire','trans.pois.syn.fire']
 
 tstop = 20000.0
 expected_avg_rate = 50
@@ -30,12 +30,12 @@ for fn in files:
     
     avg_rate = len(spikes)*1000.0/tstop
     std_isi = np.std(isis)
-    print("Num spikes: %s; avg rate: %s Hz; avg isi: %s ms; std isi: %s ms"%(len(spikes),avg_rate,np.average(isis),std_isi))
+    print("Num spikes: %s; avg rate: %s Hz; avg isi: %s ms; std isi: %s ms; max: %s ms; min: %s ms"%(len(spikes),avg_rate,np.average(isis),std_isi, np.max(isis), np.min(isis)))
     if not '-info' in sys.argv:
         print("   Checking %s; check_syns: %s"%(fn,check_syns))
         if not 'syn' in fn or check_syns:
             assert abs(avg_rate-expected_avg_rate) <= 3
-            if 'pois' in fn or 'pynn' in fn:
+            if ('pois' in fn and not 'ref' in fn) or 'pynn' in fn:
                 assert abs(std_isi-expected_std_isi) <= 3
                 
 print("All passed!")
