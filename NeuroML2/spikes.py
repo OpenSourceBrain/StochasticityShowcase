@@ -1,4 +1,4 @@
-
+from __future__ import print_function
 import numpy as np
 import sys
 
@@ -30,7 +30,9 @@ for fn in files:
     
     avg_rate = len(spikes)*1000.0/tstop
     std_isi = np.std(isis)
-    print("Num spikes: %s; avg rate: %s Hz; avg isi: %s ms; std isi: %s ms; max: %s ms; min: %s ms"%(len(spikes),avg_rate,np.average(isis),std_isi, np.max(isis), np.min(isis)))
+    print("Num spikes: %s; avg rate: %s Hz"%(len(spikes),avg_rate), end="")
+    if len(isis)>0:
+        print("; avg isi: %s ms; std isi: %s ms; max: %s ms; min: %s ms"%(np.average(isis),std_isi, np.max(isis), np.min(isis)))
     if not '-info' in sys.argv:
         print("   Checking %s; check_syns: %s"%(fn,check_syns))
         if not 'syn' in fn or check_syns:
