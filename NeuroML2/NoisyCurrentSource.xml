@@ -11,7 +11,7 @@
     <Include file="Simulation.xml"/>
 
 
-    <ComponentType name="noisyCurrentSource" extends="basePointCurrent"
+    <ComponentType name="noisyCurrentSource" extends="baseVoltageDepPointCurrentSpiking"
                    description="NeuroML implementation of PyNN's NoisyCurrentSource: a Gaussian 'white' noise current source. The current amplitude changes at fixed
     intervals, with the new value drawn from a Gaussian distribution.">
 

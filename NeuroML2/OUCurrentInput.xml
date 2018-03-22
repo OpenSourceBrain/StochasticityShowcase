@@ -13,7 +13,7 @@
     <Unit symbol="nA_per_ms" dimension="current_per_time" power="-6" />  
 
     
-    <ComponentType name="ouCurrentSource" extends="basePointCurrent"
+    <ComponentType name="ouCurrentSource" extends="baseVoltageDepPointCurrentSpiking"
                    description="..."> 
         <!-- 
 
