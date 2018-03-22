@@ -1,7 +1,7 @@
 # Script for running automated tests on OSB using Travis-CI, see https://github.com/OpenSourceBrain/osb-model-validation
  
 target: LEMS_NoisyCurrentInput.xml 
-engine: jNeuroML_NEURON
+engine: jNeuroML_NetPyNE_NP4
 mep: .test.noisy.mep
 experiments:
   v2:
