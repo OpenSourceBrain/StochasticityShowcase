@@ -2,7 +2,7 @@
     
     <!-- 
 
-        This LEMS file has been automatically generated using PyNeuroML v0.1.4 (libNeuroML v0.2.10)
+        This LEMS file has been automatically generated using PyNeuroML v0.3.12 (libNeuroML v0.2.44)
 
      -->
     
@@ -16,14 +16,14 @@
     
     <Include file="SpikingNet.nml"/>
    
-    <Simulation id="SpikingNet" length="1000ms" step="0.05ms" target="simplenet">
+    <Simulation id="SpikingNet" length="1000ms" step="0.05ms" target="simplenet" seed="12345">  <!-- Note seed: ensures same random numbers used every run -->
         
         <Display id="display_voltages" title="Voltages" timeScale="1ms" xmin="-100.0" xmax="1100.0" ymin="-68" ymax="-47">
-            <Line id="Pop0[0]: Vm" quantity="Pop0[0]/v" scale="1mV" color="#168c20" timeScale="1ms"/>
-            <Line id="Pop0[1]: Vm" quantity="Pop0[1]/v" scale="1mV" color="#0b8f25" timeScale="1ms"/>
-            <Line id="Pop0[2]: Vm" quantity="Pop0[2]/v" scale="1mV" color="#bc5623" timeScale="1ms"/>
-            <Line id="Pop0[3]: Vm" quantity="Pop0[3]/v" scale="1mV" color="#486944" timeScale="1ms"/>
-            <Line id="Pop0[4]: Vm" quantity="Pop0[4]/v" scale="1mV" color="#a92772" timeScale="1ms"/>
+            <Line id="Pop0[0]: Vm" quantity="Pop0[0]/v" scale="1mV" color="#75342c" timeScale="1ms"/>
+            <Line id="Pop0[1]: Vm" quantity="Pop0[1]/v" scale="1mV" color="#3e87cd" timeScale="1ms"/>
+            <Line id="Pop0[2]: Vm" quantity="Pop0[2]/v" scale="1mV" color="#89629b" timeScale="1ms"/>
+            <Line id="Pop0[3]: Vm" quantity="Pop0[3]/v" scale="1mV" color="#74e12d" timeScale="1ms"/>
+            <Line id="Pop0[4]: Vm" quantity="Pop0[4]/v" scale="1mV" color="#dafa7f" timeScale="1ms"/>
         </Display>
         
         <OutputFile id="Volts_file" fileName="v.dat">

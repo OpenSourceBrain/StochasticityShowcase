@@ -1,13 +1,13 @@
-<neuroml xmlns="http://www.neuroml.org/schema/neuroml2"  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2 https://raw.github.com/NeuroML/NeuroML2/development/Schemas/NeuroML2/NeuroML_v2beta4.xsd" id="SpikingNet">
-    <expTwoSynapse id="syn0" erev="0mV" gbase="10nS" tauDecay="10ms" tauRise="0.5ms"/>
-    <iafCell id="iaf0" reset="-65mV" C="1.0 nF" thresh="-50mV" leakConductance="10 nS" leakReversal="-60mV"/>
-    <poissonFiringSynapse id="poissonFiringSyn" synapse="syn0" averageRate="50 Hz" spikeTarget="./syn0"/>
+<neuroml xmlns="http://www.neuroml.org/schema/neuroml2"  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2 https://raw.github.com/NeuroML/NeuroML2/development/Schemas/NeuroML2/NeuroML_v2beta5.xsd" id="SpikingNet">
+    <expTwoSynapse id="syn0" gbase="10nS" erev="0mV" tauDecay="10ms" tauRise="0.5ms"/>
+    <iafCell id="iaf0" leakReversal="-60mV" thresh="-50mV" reset="-65mV" C="1.0 nF" leakConductance="10 nS"/>
+    <poissonFiringSynapse id="poissonFiringSyn" averageRate="50 Hz" synapse="syn0" spikeTarget="./syn0"/>
     <network id="simplenet">
         <population id="Pop0" component="iaf0" size="5"/>
-        <explicitInput input="poissonFiringSyn" destination="synapses" target="Pop0[0]"/>
-        <explicitInput input="poissonFiringSyn" destination="synapses" target="Pop0[1]"/>
-        <explicitInput input="poissonFiringSyn" destination="synapses" target="Pop0[2]"/>
-        <explicitInput input="poissonFiringSyn" destination="synapses" target="Pop0[3]"/>
-        <explicitInput input="poissonFiringSyn" destination="synapses" target="Pop0[4]"/>
+        <explicitInput target="Pop0[0]" input="poissonFiringSyn" destination="synapses"/>
+        <explicitInput target="Pop0[1]" input="poissonFiringSyn" destination="synapses"/>
+        <explicitInput target="Pop0[2]" input="poissonFiringSyn" destination="synapses"/>
+        <explicitInput target="Pop0[3]" input="poissonFiringSyn" destination="synapses"/>
+        <explicitInput target="Pop0[4]" input="poissonFiringSyn" destination="synapses"/>
     </network>
 </neuroml>

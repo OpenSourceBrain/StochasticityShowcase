@@ -2,7 +2,7 @@ from __future__ import print_function
 import numpy as np
 import sys
 
-files = ['regular.spikes','random.spikes','poisson.spikes','refpoisson.spikes','pynn.spikes','pois.syn.fire','trans.pois.syn.fire']
+files = ['regular.spikes','random.spikes','poisson.spikes','refpoisson.spikes','pynn.spikes','pois.syn.spikes','trans.pois.syn.spikes']
 
 tstop = 20000.0
 expected_avg_rate = 50

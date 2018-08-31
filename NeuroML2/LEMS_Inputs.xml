@@ -96,6 +96,8 @@
             <OutputColumn id="v1" quantity="izhPop[1]/v" />
             <OutputColumn id="v2" quantity="izhPop[2]/v" />
             <OutputColumn id="v3" quantity="izhPop[3]/v" />
+            <OutputColumn id="v4" quantity="izhPop[4]/v" />
+            <OutputColumn id="v5" quantity="izhPop[5]/v" />
             <OutputColumn id="v6" quantity="izhPop[6]/v" />
         </OutputFile>
     
@@ -128,11 +130,11 @@
             <EventSelection id="0" select="spikeSourcePoissonPop[0]" eventPort="spike"/>
         </EventOutputFile>
         
-        <EventOutputFile id="spikes4" fileName="pois.syn.fire" format="ID_TIME">
+        <EventOutputFile id="spikes4" fileName="pois.syn.spikes" format="ID_TIME">
             <EventSelection id="0" select="izhPop[4]/poissonFiringSyn" eventPort="spike"/>
         </EventOutputFile>
         
-        <EventOutputFile id="spikes5" fileName="trans.pois.syn.fire" format="ID_TIME">
+        <EventOutputFile id="spikes5" fileName="trans.pois.syn.spikes" format="ID_TIME">
             <EventSelection id="0" select="izhPop[5]/transPoissonFiringSyn" eventPort="spike"/>
         </EventOutputFile>
 
