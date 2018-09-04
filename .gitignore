@@ -21,3 +21,10 @@ NeuroML2/*dat
 /NeuroML2/NET_NoisyCurrentInput.net.nml
 /NeuroML2/NET_Inputs.net.nml
 /NeuroML2/*.spikes
+/NeuroML2/test/*.spikes
+/NeuroML2/test/*.png
+/NeuroML2/test/ParamSweep_*
+/NeuroML2/test/LEMS_SimTest.xml
+/NeuroML2/test/RunStims.json
+/NeuroML2/test/RunStims.net.nml
+/NeuroML2/test/SimTest.json

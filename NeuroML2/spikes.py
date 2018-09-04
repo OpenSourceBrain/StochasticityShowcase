@@ -38,7 +38,8 @@ for fn in files:
         if not 'syn' in fn or check_syns:
             assert abs(avg_rate-expected_avg_rate) <= 3
             if ('pois' in fn and not 'ref' in fn) or 'pynn' in fn:
-                assert abs(std_isi-expected_std_isi) <= 3
+                assert abs(std_isi-expected_std_isi) <= 1.6
                 
-print("All passed!")
+if not '-info' in sys.argv:                
+    print("********************************\n*\n* All passed with inputs of %sHz!\n*\n********************************"%expected_avg_rate)
         

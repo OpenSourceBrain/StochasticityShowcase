@@ -4,7 +4,7 @@ import sys
 
 files = ['regularF.spikes','randomF.spikes','poissonF.spikes','refpoissonF.spikes','pynnF.spikes','poisF.syn.spikes','transF.pois.syn.spikes']
 
-tstop = 2000.0
+tstop = 10000.0
 expected_avg_rate = 10000
 expected_std_isi = 0.1
 
@@ -36,9 +36,11 @@ for fn in files:
     if not '-info' in sys.argv:
         print("   Checking %s; check_syns: %s"%(fn,check_syns))
         if not 'syn' in fn or check_syns:
-            assert abs(avg_rate-expected_avg_rate) <= 200
+            #print('Observed: %s, expected: %s'%(avg_rate,avg_rate-expected_avg_rate))
+            assert abs(avg_rate-expected_avg_rate) <= 100
             if ('pois' in fn and not 'ref' in fn) or 'pynn' in fn:
                 assert abs(std_isi-expected_std_isi) <= 100
                 
-print("All passed!")
+if not '-info' in sys.argv:      
+    print("********************************\n*\n* All passed with inputs of %sHz!\n*\n********************************"%expected_avg_rate)
         

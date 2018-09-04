@@ -59,7 +59,7 @@
     <!-- End of NeuroML2 content -->
         
 
-    <Simulation id="sim1" length="2000ms" step="0.001ms" target="net1" seed="1234567"> <!-- Note seed: ensures same random numbers used every run -->
+    <Simulation id="sim1" length="10000ms" step="0.025ms" target="net1" seed="1234567"> <!-- Note seed: ensures same random numbers used every run -->
 
     
         <Display id="d40" title="Ex16: Izhikevich cell, spiking inputs, time since spikes" timeScale="1ms" xmin="-50" xmax="2050" ymin="-.1" ymax="1.3">

@@ -46,9 +46,9 @@
     
         <synapticConnection from="spikeGenRegularPop[0]" to="izhPop[0]" synapse="syn1" destination="synapses"/>
         <synapticConnection from="spikeGenRandomPop[0]" to="izhPop[1]" synapse="syn1" destination="synapses"/>
-        <synapticConnection from="spikeGenRefPoissonPop[0]" to="izhPop[6]" synapse="syn1" destination="synapses"/>
         <synapticConnection from="spikeGenPoissonPop[0]" to="izhPop[2]" synapse="syn1" destination="synapses"/>
         <synapticConnection from="spikeSourcePoissonPop[0]" to="izhPop[3]" synapse="syn1" destination="synapses"/>
+        <synapticConnection from="spikeGenRefPoissonPop[0]" to="izhPop[6]" synapse="syn1" destination="synapses"/>
         
         
         <explicitInput target="izhPop[4]" input="poissonFiringSyn" destination="synapses"/>
@@ -59,7 +59,7 @@
     <!-- End of NeuroML2 content -->
         
 
-    <Simulation id="sim1" length="20000ms" step="0.01ms" target="net1" seed="1234567"> <!-- Note seed: ensures same random numbers used every run -->
+    <Simulation id="sim1" length="20000ms" step="0.025ms" target="net1" seed="1234567"> <!-- Note seed: ensures same random numbers used every run -->
 
     
         <Display id="d40" title="Ex16: Izhikevich cell, spiking inputs, time since spikes" timeScale="1ms" xmin="-500" xmax="20500" ymin="-5" ymax="45">
