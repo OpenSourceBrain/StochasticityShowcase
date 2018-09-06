@@ -14,25 +14,32 @@ def generate():
     net = Network(id='RunStims')
     net.notes = 'Example with spike producers'
 
-    net.parameters = { 'rate':       50}
-
-    cell = Cell(id='ifcell', pynn_cell='IF_curr_alpha')
-
-
-
+    net.parameters = { 'rate':       50, 
+                       'rateHz':     '50Hz', 
+                       'periodms':     '20ms'}
+    
+    
     ssp = Cell(id='ssp', pynn_cell='SpikeSourcePoisson')
-    
     ssp.parameters = { 'rate':       'rate',
-                             'start':      0,
-                             'duration':   1e9}
-                             
+                       'start':      0,
+                       'duration':   1e9}
     net.cells.append(ssp)
-
-
     sspPop = Population(id='sspPop', size=1, component=ssp.id, properties={'color':'.5 0 0'})
+    net.populations.append(sspPop)
+
+
+    sg = Cell(id='sg', neuroml2_cell='SpikeGenerator')
+    sg.parameters = { 'period':       'periodms'}
+    net.cells.append(sg)
+    sgPop = Population(id='sgPop', size=1, component=sg.id, properties={'color':'.5 0 0'})
+    net.populations.append(sgPop)
     
 
-    net.populations.append(sspPop)
+    sgp = Cell(id='sgp', neuroml2_cell='spikeGeneratorPoisson')
+    sgp.parameters = { 'average_rate':       'rateHz'}
+    net.cells.append(sgp)
+    sgpPop = Population(id='sgpPop', size=1, component=sgp.id, properties={'color':'.5 0 0'})
+    net.populations.append(sgpPop)
 
 
     net.synapses.append(Synapse(id='ampa', 
@@ -73,14 +80,18 @@ if __name__ == "__main__":
         
         sim, net = generate()
         
-        fixed = {'dt':0.025,'duration':10000}
+        fixed = {'duration':10000}
  
         #
         vary = {'rate':[100,500,1000,5000,10000,20000,40000]}
-        vary = {'rate':[100,500,1000,5000,10000]}
+        vary = {'rate':[10,100,500,1000,5000,10000,20000]}
+        vary = {'rateHz':['%sHz'%i for i in [10,100,500,1000,5000,10000,20000]]}
+        #vary = {'periodms':['%sms'%(1000/(i+1)) for i in range(10)]}
         
-        vary['seed'] = [i for i in range(30)]
-        vary['seed'] = [i for i in range(20)]
+        #vary['seed'] = [i for i in range(30)]
+        vary['seed'] = [i for i in range(2)]
+        
+        #vary['dt'] = [0.1,0.025,0.01,0.005]
 
         simulator = 'jNeuroML'
         simulator = 'jNeuroML_NEURON'
@@ -95,7 +106,7 @@ if __name__ == "__main__":
                             vary, 
                             fixed,
                             num_parallel_runs=16,
-                            plot_all=True, 
+                            plot_all=False, 
                             heatmap_all=False,
                             show_plot_already=False,
                             peak_threshold=0)
@@ -106,7 +117,10 @@ if __name__ == "__main__":
         #  ps.plotLines('weightInput','average_last_1percent',save_figure_to='average_last_1percent.png')
         #ps.plotLines('weightInput','mean_spike_frequency',save_figure_to='mean_spike_frequency.png')
         #ps.plotLines('rate','sspPop[0]/spike:mean_spike_frequency',save_figure_to='mean_spike_frequency.png')
-        ps.plotLines('rate','sspPop[0]/spike:mean_spike_frequency',second_param='seed',save_figure_to='mean_spike_frequency.png')
+        #ps.plotLines('rate','sspPop[0]/spike:mean_spike_frequency',second_param='seed',save_figure_to='mean_spike_frequency.png')
+        #ps.plotLines('rate','sspPop[0]/spike:mean_spike_frequency',second_param='dt',save_figure_to='mean_spike_frequency.png')
+        ps.plotLines('rateHz','sgpPop[0]/spike:mean_spike_frequency',second_param='seed',save_figure_to='mean_spike_frequency_sgp.png')
+        #ps.plotLines('periodms','sgPop[0]/spike:mean_spike_frequency',second_param='seed',save_figure_to='mean_spike_frequency_sg.png')
 
         import matplotlib.pyplot as plt
 

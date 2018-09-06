@@ -28,3 +28,4 @@ NeuroML2/*dat
 /NeuroML2/test/RunStims.json
 /NeuroML2/test/RunStims.net.nml
 /NeuroML2/test/SimTest.json
+/NeuroML2/test/report.*.txt
