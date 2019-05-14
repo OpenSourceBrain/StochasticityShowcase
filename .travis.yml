@@ -32,7 +32,9 @@ env:
     - OMV_ENGINE=jNeuroML_NetPyNE
     - OMV_ENGINE=jNeuroML_validate
     # - OMV_ENGINE=PyLEMS_NeuroML2
-    - OMV_ENGINE=PyNEURON
+    - OMV_ENGINE=PyNEURON:7.4
+    - OMV_ENGINE=PyNEURON:7.5
+    - OMV_ENGINE=PyNEURON:7.6
     - OMV_ENGINE=PyNN_NEURON
     - OMV_ENGINE=PyNN_Nest
     - OMV_ENGINE=PyNN_Brian1
