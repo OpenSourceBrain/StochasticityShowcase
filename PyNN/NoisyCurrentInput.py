@@ -18,36 +18,46 @@ mean=0.55
 stdev=0.1
 start=50.0
 stop=450.0
+noise_dt = [0,1,5,10]
 
 steady = DCSource(amplitude=mean, start=start, stop=stop)
 cells[0].inject(steady)
 
-noise1 = NoisyCurrentSource(mean=mean, stdev=stdev, start=start, stop=stop, dt=1.0)
+noise1 = NoisyCurrentSource(mean=mean, stdev=stdev, start=start, stop=stop, dt=noise_dt[1])
 cells[1].inject(noise1)
 #record('i', noise0, filename)
 
-noise2 = NoisyCurrentSource(mean=mean, stdev=stdev, start=start, stop=stop, dt=5)
+noise2 = NoisyCurrentSource(mean=mean, stdev=stdev, start=start, stop=stop, dt=noise_dt[2])
 cells[2].inject(noise2)
 
-noise3 = NoisyCurrentSource(mean=mean, stdev=stdev, start=start, stop=stop, dt=10)
+noise3 = NoisyCurrentSource(mean=mean, stdev=stdev, start=start, stop=stop, dt=noise_dt[3])
 cells[3].inject(noise3)
 
 record('v', cells, filename, annotations={'script_name': __file__})
 
 run(500.0)
 
-if '--plot-figure' in sys.argv:
+figure_option = '--plot-figure'
+
+if figure_option in sys.argv:
     
     import matplotlib.pyplot as plt
     plt.ion()
-    vm = cells.get_data().segments[0].filter(name="v")[0]
-    plt.plot(vm.times, vm)
+    vms = cells.get_data().segments[0].filter(name="v")[0]
+    print vms, len(vms)
+    print vms.times, len(vms.times)
+    i=0
+    for vm in vms.T:
+        print vm
+        plt.plot(vms.times, vm, label='Noise dt: %sms'%noise_dt[i] if i!=0 else 'No noise')
+        i+=1
     plt.xlabel("time (ms)")
     plt.ylabel("Vm (mV)")
 
     plt.legend()
 
     plt.show()
-
-
+else:
+    print('Finished simulation in simulator: %s. To plot the results, run with: %s'%(simulator_name, figure_option))
+    
 end()

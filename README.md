@@ -1,7 +1,9 @@
 Stochasticity Showcase
 ======================
 
-A repository for neuronal models containing stochastic elements (e.g. input currents, syanpses, ion channels) in various formats.
+A repository for neuronal models containing stochastic elements (e.g. input currents, synapses, ion channels) in various formats.
+
+This will be used to create tests to verify stochastic elements are producing statistically identical behaviour across different implementations.
 
 Initial target formats: NeuroML2, PyNN, NEURON...
 
