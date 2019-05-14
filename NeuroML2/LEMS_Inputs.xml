@@ -35,24 +35,76 @@
 
 
     <network id="net1">
-        <population id="izhPop" component="RS" size="7"/>
+        <population id="izhPop" component="RS" type="populationList" size="7">
+            <instance id="0">
+                <location x="0" y="0" z="0"/>
+            </instance>
+            <instance id="1">
+                <location x="10" y="0" z="0"/>
+            </instance>
+            <instance id="2">
+                <location x="20" y="0" z="0"/>
+            </instance>
+            <instance id="3">
+                <location x="30" y="0" z="0"/>
+            </instance>
+            <instance id="4">
+                <location x="40" y="0" z="0"/>
+            </instance>
+            <instance id="5">
+                <location x="50" y="0" z="0"/>
+            </instance>
+            <instance id="6">
+                <location x="60" y="0" z="0"/>
+            </instance>
+        </population>
 
-        <population id="spikeGenRegularPop" component="spikeGenRegular" size="1"/>
-        <population id="spikeGenPoissonPop" component="spikeGenPoisson" size="1"/>
-        <population id="spikeGenRefPoissonPop" component="spikeGenRefPoisson" size="1"/>
-        <population id="spikeGenRandomPop" component="spikeGenRandom" size="1"/>
-        <population id="spikeSourcePoissonPop" component="spikeSourcePoisson1" size="1"/>
+        <population id="spikeGenRegularPop" component="spikeGenRegular" type="populationList" size="1">
+            <instance id="0">
+                <location x="0" y="0" z="0"/>
+            </instance>
+        </population>
+        <population id="spikeGenPoissonPop" component="spikeGenPoisson" type="populationList" size="1">
+            <instance id="0">
+                <location x="0" y="0" z="0"/>
+            </instance>
+        </population>
+        <population id="spikeGenRefPoissonPop" component="spikeGenRefPoisson" type="populationList" size="1">
+            <instance id="0">
+                <location x="0" y="0" z="0"/>
+            </instance>
+        </population>
+        <population id="spikeGenRandomPop" component="spikeGenRandom" type="populationList" size="1">
+            <instance id="0">
+                <location x="0" y="0" z="0"/>
+            </instance>
+        </population>
+        <population id="spikeSourcePoissonPop" component="spikeSourcePoisson1" type="populationList" size="1">
+            <instance id="0">
+                <location x="0" y="0" z="0"/>
+            </instance>
+        </population>
 
-    
-        <synapticConnection from="spikeGenRegularPop[0]" to="izhPop[0]" synapse="syn1" destination="synapses"/>
-        <synapticConnection from="spikeGenRandomPop[0]" to="izhPop[1]" synapse="syn1" destination="synapses"/>
-        <synapticConnection from="spikeGenPoissonPop[0]" to="izhPop[2]" synapse="syn1" destination="synapses"/>
-        <synapticConnection from="spikeSourcePoissonPop[0]" to="izhPop[3]" synapse="syn1" destination="synapses"/>
-        <synapticConnection from="spikeGenRefPoissonPop[0]" to="izhPop[6]" synapse="syn1" destination="synapses"/>
         
+        <projection id="pj0" presynapticPopulation="spikeGenRegularPop" postsynapticPopulation="izhPop" synapse="syn1">
+            <connection id="0" preCellId="../spikeGenRegularPop/0/spikeGenRegular" postCellId="../izhPop/0/RS"/>
+        </projection>
+        <projection id="pj1" presynapticPopulation="spikeGenRandomPop" postsynapticPopulation="izhPop" synapse="syn1">
+            <connection id="0" preCellId="../spikeGenRandomPop/0/spikeGenRandom" postCellId="../izhPop/1/RS"/>
+        </projection>
+        <projection id="pj2" presynapticPopulation="spikeGenPoissonPop" postsynapticPopulation="izhPop" synapse="syn1">
+            <connection id="0" preCellId="../spikeGenPoissonPop/0/spikeGenPoisson" postCellId="../izhPop/2/RS"/>
+        </projection>
+        <projection id="pj3" presynapticPopulation="spikeSourcePoissonPop" postsynapticPopulation="izhPop" synapse="syn1">
+            <connection id="0" preCellId="../spikeSourcePoissonPop/0/spikeSourcePoisson1" postCellId="../izhPop/3/RS"/>
+        </projection>
+        <projection id="pj4" presynapticPopulation="spikeGenRefPoissonPop" postsynapticPopulation="izhPop" synapse="syn1">
+            <connection id="0" preCellId="../spikeGenRefPoissonPop/0/spikeGenRefPoisson" postCellId="../izhPop/6/RS"/>
+        </projection>
+   
         
-        <explicitInput target="izhPop[4]" input="poissonFiringSyn" destination="synapses"/>
-        <explicitInput target="izhPop[5]" input="transPoissonFiringSyn" destination="synapses"/>
+        <explicitInput target="izhPop/4/RS" input="poissonFiringSyn" destination="synapses"/>
+        <explicitInput target="izhPop/5/RS" input="transPoissonFiringSyn" destination="synapses"/>
         
     </network>
 
@@ -61,81 +113,81 @@
 
     <Simulation id="sim1" length="20000ms" step="0.025ms" target="net1" seed="1234567"> <!-- Note seed: ensures same random numbers used every run -->
 
-    
+
         <Display id="d40" title="Ex16: Izhikevich cell, spiking inputs, time since spikes" timeScale="1ms" xmin="-500" xmax="20500" ymin="-5" ymax="45">
-            <Line id ="Regular spike gen t since" quantity="spikeGenRegularPop[0]/tsince" scale="1ms"  color="#3fffaa" timeScale="1ms"/>
-            <Line id ="Random spike gen t since" quantity="spikeGenRandomPop[0]/tsince" scale="1ms"  color="#3ff9999" timeScale="1ms"/>
-            <Line id ="Random spike gen ref t since" quantity="spikeGenRefPoissonPop[0]/tsince" scale="1ms"  color="#0000ff" timeScale="1ms"/>
-            <Line id ="Poisson spike gen t since" quantity="spikeGenPoissonPop[0]/tsince" scale="1ms"  color="#3f0009" timeScale="1ms"/>
-            <Line id ="PyNN spike gen t since" quantity="spikeSourcePoissonPop[0]/tsince" scale="1ms"  color="#aa0009" timeScale="1ms"/>
+            <Line id ="Regular spike gen t since" quantity="spikeGenRegularPop/0/spikeGenRegular/tsince" scale="1ms"  color="#3fffaa" timeScale="1ms"/>
+            <Line id ="Random spike gen t since" quantity="spikeGenRandomPop/0/spikeGenRandom/tsince" scale="1ms"  color="#3ff9999" timeScale="1ms"/>
+            <Line id ="Random spike gen ref t since" quantity="spikeGenRefPoissonPop/0/spikeGenRefPoisson/tsince" scale="1ms"  color="#0000ff" timeScale="1ms"/>
+            <Line id ="Poisson spike gen t since" quantity="spikeGenPoissonPop/0/spikeGenPoisson/tsince" scale="1ms"  color="#3f0009" timeScale="1ms"/>
+            <Line id ="PyNN spike gen t since" quantity="spikeSourcePoissonPop/0/spikeSourcePoisson1/tsince" scale="1ms"  color="#aa0009" timeScale="1ms"/>
         </Display>
-    
+   
         <Display id="d4" title="Ex16: Izhikevich cell, spiking inputs" timeScale="1ms" xmin="-500" xmax="20500" ymin="-61" ymax="-56">
  
-            <Line id="regular spike gen" quantity="izhPop[0]/v" scale="1mV"
+            <Line id="regular spike gen" quantity="izhPop/0/RS/v" scale="1mV"
             color="#80FF00" timeScale="1ms"/>
-            <Line id="random (uniform) spike gen" quantity="izhPop[1]/v" scale="1mV"
+            <Line id="random (uniform) spike gen" quantity="izhPop/1/RS/v" scale="1mV"
             color="#01A9DB" timeScale="1ms"/>
-            <Line id="poisson spike gen" quantity="izhPop[2]/v" scale="1mV"
+            <Line id="poisson spike gen" quantity="izhPop/2/RS/v" scale="1mV"
             color="#8000FF" timeScale="1ms"/>
-            <Line id="poisson ref spike gen" quantity="izhPop[6]/v" scale="1mV"
+            <Line id="poisson ref spike gen" quantity="izhPop/6/RS/v" scale="1mV"
             color="#a00aaF" timeScale="1ms"/>
-            <Line id="pynn spike gen" quantity="izhPop[3]/v" scale="1mV"
+            <Line id="pynn spike gen" quantity="izhPop/3/RS/v" scale="1mV"
             color="#8066FF" timeScale="1ms"/>
             
-            <Line id="poisson firing syn" quantity="izhPop[4]/v" scale="1mV"
+            <Line id="poisson firing syn" quantity="izhPop/4/RS/v" scale="1mV"
             color="#806ccc" timeScale="1ms"/>
             
-            <Line id="trans poisson firing syn" quantity="izhPop[5]/v" scale="1mV"
+            <Line id="trans poisson firing syn" quantity="izhPop/5/RS/v" scale="1mV"
             color="#ccc6FF" timeScale="1ms"/>
         </Display>
     
     
         <OutputFile id="of0" fileName="inputs.dat">
-            <OutputColumn id="v0" quantity="izhPop[0]/v" />
-            <OutputColumn id="v1" quantity="izhPop[1]/v" />
-            <OutputColumn id="v2" quantity="izhPop[2]/v" />
-            <OutputColumn id="v3" quantity="izhPop[3]/v" />
-            <OutputColumn id="v4" quantity="izhPop[4]/v" />
-            <OutputColumn id="v5" quantity="izhPop[5]/v" />
-            <OutputColumn id="v6" quantity="izhPop[6]/v" />
+            <OutputColumn id="v0" quantity="izhPop/0/RS/v" />
+            <OutputColumn id="v1" quantity="izhPop/1/RS/v" />
+            <OutputColumn id="v2" quantity="izhPop/2/RS/v" />
+            <OutputColumn id="v3" quantity="izhPop/3/RS/v" />
+            <OutputColumn id="v4" quantity="izhPop/4/RS/v" />
+            <OutputColumn id="v5" quantity="izhPop/5/RS/v" />
+            <OutputColumn id="v6" quantity="izhPop/6/RS/v" />
         </OutputFile>
     
         <OutputFile id="of1" fileName="timesince.dat">
-            <OutputColumn id="t0" quantity="spikeGenRegularPop[0]/tsince" />
-            <OutputColumn id="t1" quantity="spikeGenRandomPop[0]/tsince" />
-            <OutputColumn id="t2" quantity="spikeGenRefPoissonPop[0]/tsince" />
-            <OutputColumn id="t3" quantity="spikeGenPoissonPop[0]/tsince" />
-            <OutputColumn id="t4" quantity="spikeSourcePoissonPop[0]/tsince" />
+            <OutputColumn id="t0" quantity="spikeGenRegularPop/0/spikeGenRegular/tsince" />
+            <OutputColumn id="t1" quantity="spikeGenRandomPop/0/spikeGenRandom/tsince" />
+            <OutputColumn id="t2" quantity="spikeGenRefPoissonPop/0/spikeGenRefPoisson/tsince" />
+            <OutputColumn id="t3" quantity="spikeGenPoissonPop/0/spikeGenPoisson/tsince" />
+            <OutputColumn id="t4" quantity="spikeSourcePoissonPop/0/spikeSourcePoisson1/tsince" />
         </OutputFile>
         
         
         <EventOutputFile id="spikes0" fileName="regular.spikes" format="ID_TIME">
-            <EventSelection id="0" select="spikeGenRegularPop[0]" eventPort="spike"/>
+            <EventSelection id="0" select="spikeGenRegularPop/0/spikeGenRegular" eventPort="spike"/>
         </EventOutputFile>
         
         <EventOutputFile id="spikes1" fileName="random.spikes" format="ID_TIME">
-            <EventSelection id="0" select="spikeGenRandomPop[0]" eventPort="spike"/>
+            <EventSelection id="0" select="spikeGenRandomPop/0/spikeGenRandom" eventPort="spike"/>
         </EventOutputFile>
         
         <EventOutputFile id="spikes2" fileName="poisson.spikes" format="ID_TIME">
-            <EventSelection id="0" select="spikeGenPoissonPop[0]" eventPort="spike"/>
+            <EventSelection id="0" select="spikeGenPoissonPop/0/spikeGenPoisson" eventPort="spike"/>
         </EventOutputFile>
         
         <EventOutputFile id="spikes2a" fileName="refpoisson.spikes" format="ID_TIME">
-            <EventSelection id="0" select="spikeGenRefPoissonPop[0]" eventPort="spike"/>
+            <EventSelection id="0" select="spikeGenRefPoissonPop/0/spikeGenRefPoisson" eventPort="spike"/>
         </EventOutputFile>
         
         <EventOutputFile id="spikes3" fileName="pynn.spikes" format="ID_TIME">
-            <EventSelection id="0" select="spikeSourcePoissonPop[0]" eventPort="spike"/>
+            <EventSelection id="0" select="spikeSourcePoissonPop/0/spikeSourcePoisson1" eventPort="spike"/>
         </EventOutputFile>
         
         <EventOutputFile id="spikes4" fileName="pois.syn.spikes" format="ID_TIME">
-            <EventSelection id="0" select="izhPop[4]/poissonFiringSyn" eventPort="spike"/>
+            <EventSelection id="0" select="izhPop/4/RS/poissonFiringSyn" eventPort="spike"/>
         </EventOutputFile>
         
         <EventOutputFile id="spikes5" fileName="trans.pois.syn.spikes" format="ID_TIME">
-            <EventSelection id="0" select="izhPop[5]/transPoissonFiringSyn" eventPort="spike"/>
+            <EventSelection id="0" select="izhPop/5/RS/transPoissonFiringSyn" eventPort="spike"/>
         </EventOutputFile>
 
     </Simulation>
