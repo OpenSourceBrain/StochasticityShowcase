@@ -30,7 +30,7 @@
     <!-- End of NeuroML2 content -->
         
 
-    <Simulation id="sim1" length="400ms" step="0.0001ms" target="net1" seed="123456711"> <!-- Note seed: ensures same random numbers used every run -->
+    <Simulation id="sim1" length="400ms" step="0.01ms" target="net1" seed="123456711"> <!-- Note seed: ensures same random numbers used every run -->
 
     
         <Display id="d40" title="E..." timeScale="1ms" xmin="-50" xmax="500" ymin="-5" ymax="55">
@@ -39,6 +39,7 @@
         
         <OutputFile id="of1" fileName="timesince2.dat">
             <OutputColumn id="t0" quantity="spikeGenRegularPop50/0/spikeGenRegular50/tsince" />
+            <OutputColumn id="t1" quantity="spikeGenRegularPop50/0/spikeGenRegular50/tnext" />
         </OutputFile>
         
         <EventOutputFile id="spikes50" fileName="regular50.spikes" format="ID_TIME">
