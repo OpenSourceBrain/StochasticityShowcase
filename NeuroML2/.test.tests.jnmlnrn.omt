@@ -41,3 +41,21 @@ experiments:
           id: 2
         tolerance: 9.167529663197152e-06
 
+  spikeGenRandom_rate:
+    observables:
+      spike rate:
+        spiketimes file: 
+          path: random.all.spikes
+          format: ID_TIME
+          id: 0
+        tolerance: 0.0023901211834610196
+
+  spikeGenRandom2_rate:
+    observables:
+      spike rate:
+        spiketimes file: 
+          path: random.all.spikes
+          format: ID_TIME
+          id: 1
+        tolerance: 0.00016751132201679866
+
