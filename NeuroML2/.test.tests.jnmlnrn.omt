@@ -12,7 +12,7 @@ experiments:
           path: regular.all.spikes
           format: ID_TIME
           id: 0
-        tolerance: 5e-6
+        tolerance: 9.999999999976694e-06
         
   spikeGenRegular50_rate:
     observables:
@@ -21,7 +21,7 @@ experiments:
           path: regular.all.spikes
           format: ID_TIME
           id: 0
-        tolerance: 3.4e-6
+        tolerance:  5.050471462375583e-06
         
   spikeGenRegular5_rate:
     observables:
@@ -30,7 +30,7 @@ experiments:
           path: regular.all.spikes
           format: ID_TIME
           id: 1
-        tolerance: 2.5640806050830634e-06
+        tolerance: 4.999967000145489e-06
 
   spikeGenRegular033_rate:
     observables:
@@ -39,7 +39,7 @@ experiments:
           path: regular.all.spikes
           format: ID_TIME
           id: 2
-        tolerance: 9.167529663197152e-06
+        tolerance: 1.3306993486427624e-05
 
   spikeGenRandom_rate:
     observables:
@@ -48,7 +48,7 @@ experiments:
           path: random.all.spikes
           format: ID_TIME
           id: 0
-        tolerance: 0.0023901211834610196
+        tolerance: 0.001612395972517106
 
   spikeGenRandom2_rate:
     observables:
@@ -57,5 +57,23 @@ experiments:
           path: random.all.spikes
           format: ID_TIME
           id: 1
-        tolerance: 0.00016751132201679866
+        tolerance: 2.4951461407727037e-05
+
+  spikeGenPoisson_rate:
+    observables:
+      spike rate:
+        spiketimes file: 
+          path: poisson.all.spikes
+          format: ID_TIME
+          id: 0
+        tolerance: 0.008269084816108944
+
+  spikeGenPoisson2_rate:
+    observables:
+      spike rate:
+        spiketimes file: 
+          path: poisson.all.spikes
+          format: ID_TIME
+          id: 1
+        tolerance: 0.00017465332115898491
 
