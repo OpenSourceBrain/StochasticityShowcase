@@ -4,6 +4,7 @@ target: LEMS_Tests.xml
 engine: jNeuroML_NEURON
 mep: .test.tests.mep
 experiments:
+    
   spikeGenRegular50:
     observables:
       spike times:
@@ -12,6 +13,7 @@ experiments:
           format: ID_TIME
           id: 0
         tolerance: 5e-6
+        
   spikeGenRegular50_rate:
     observables:
       spike rate:
@@ -20,6 +22,7 @@ experiments:
           format: ID_TIME
           id: 0
         tolerance: 3.4e-6
+        
   spikeGenRegular5_rate:
     observables:
       spike rate:
@@ -28,4 +31,13 @@ experiments:
           format: ID_TIME
           id: 1
         tolerance: 2.5640806050830634e-06
+
+  spikeGenRegular033_rate:
+    observables:
+      spike rate:
+        spiketimes file: 
+          path: regular.all.spikes
+          format: ID_TIME
+          id: 2
+        tolerance: 9.167529663197152e-06
 

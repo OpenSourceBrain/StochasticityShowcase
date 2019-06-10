@@ -32,3 +32,12 @@ experiments:
           id: 1
         tolerance: 2.5640959896122696e-06
 
+  spikeGenRegular033_rate:
+    observables:
+      spike rate:
+        spiketimes file: 
+          path: regular.all.spikes
+          format: ID_TIME
+          id: 2
+        tolerance: 9.167514661627743e-06
+
