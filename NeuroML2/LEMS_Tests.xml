@@ -30,7 +30,7 @@
     <!-- End of NeuroML2 content -->
         
 
-    <Simulation id="sim1" length="400ms" step="0.01ms" target="net1" seed="123456711"> <!-- Note seed: ensures same random numbers used every run -->
+    <Simulation id="sim1" length="400ms" step="0.001ms" target="net1" seed="123456711"> <!-- Note seed: ensures same random numbers used every run -->
 
     
         <Display id="d40" title="E..." timeScale="1ms" xmin="-50" xmax="500" ymin="-5" ymax="55">
