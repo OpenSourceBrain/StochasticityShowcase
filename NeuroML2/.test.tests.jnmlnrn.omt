@@ -77,3 +77,21 @@ experiments:
           id: 1
         tolerance: 0.00017465332115898491
 
+  spikeSourcePoisson_rate:
+    observables:
+      spike rate:
+        spiketimes file: 
+          path: ssp.all.spikes
+          format: ID_TIME
+          id: 0
+        tolerance: 0.029206662965026452
+
+  spikeSourcePoisson2_rate:
+    observables:
+      spike rate:
+        spiketimes file: 
+          path: ssp.all.spikes
+          format: ID_TIME
+          id: 1
+        tolerance: 0.0008633036004321184
+

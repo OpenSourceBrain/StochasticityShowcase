@@ -20,9 +20,11 @@
     <spikeGeneratorRandom id="spikeGenRandom" minISI="1.8 ms" maxISI="2.2 ms"/>
     <spikeGeneratorRandom id="spikeGenRandom2" minISI="0.18 ms" maxISI="0.22 ms"/>
     
-    
     <spikeGeneratorPoisson id="spikeGenPoisson" averageRate="500 Hz"/>
     <spikeGeneratorPoisson id="spikeGenPoisson2" averageRate="20000 Hz"/>
+    
+    <SpikeSourcePoisson id="spikeSourcePoisson" start="0ms" duration="50s" rate="500Hz"/>
+    <SpikeSourcePoisson id="spikeSourcePoisson2" start="0ms" duration="50s" rate="20000Hz"/>
 
 
     <network id="net1">
@@ -59,7 +61,17 @@
         </population>
         <population id="spikeGenPoissonPop2" component="spikeGenPoisson2" type="populationList" size="1">
             <instance id="0">
-                <location x="50" y="0" z="0"/>
+                <location x="60" y="0" z="0"/>
+            </instance>
+        </population>
+        <population id="spikeSourcePoissonPop" component="spikeSourcePoisson" type="populationList" size="1">
+            <instance id="0">
+                <location x="70" y="0" z="0"/>
+            </instance>
+        </population>
+        <population id="spikeSourcePoissonPop2" component="spikeSourcePoisson2" type="populationList" size="1">
+            <instance id="0">
+                <location x="80" y="0" z="0"/>
             </instance>
         </population>
        
@@ -95,6 +107,11 @@
         <EventOutputFile id="spikes3" fileName="poisson.all.spikes" format="ID_TIME">
             <EventSelection id="0" select="spikeGenPoissonPop/0/spikeGenPoisson" eventPort="spike"/>
             <EventSelection id="1" select="spikeGenPoissonPop2/0/spikeGenPoisson2" eventPort="spike"/>
+        </EventOutputFile>
+        
+        <EventOutputFile id="spikes4" fileName="ssp.all.spikes" format="ID_TIME">
+            <EventSelection id="0" select="spikeSourcePoissonPop/0/spikeSourcePoisson" eventPort="spike"/>
+            <EventSelection id="1" select="spikeSourcePoissonPop2/0/spikeSourcePoisson2" eventPort="spike"/>
         </EventOutputFile>
 
     </Simulation>

@@ -48,7 +48,7 @@ experiments:
           path: random.all.spikes
           format: ID_TIME
           id: 0
-        tolerance: 0.000688973429590078
+        tolerance: 0.0023911860582371673
 
   spikeGenRandom2_rate:
     observables:
@@ -57,7 +57,7 @@ experiments:
           path: random.all.spikes
           format: ID_TIME
           id: 1
-        tolerance: 0.0003393416771461489
+        tolerance: 0.0008483457258347698
 
   spikeGenPoisson_rate:
     observables:
@@ -66,7 +66,7 @@ experiments:
           path: poisson.all.spikes
           format: ID_TIME
           id: 0
-        tolerance: 0.02444872960524333
+        tolerance: 0.01780763755338546
 
   spikeGenPoisson2_rate:
     observables:
@@ -75,5 +75,23 @@ experiments:
           path: poisson.all.spikes
           format: ID_TIME
           id: 1
-        tolerance: 0.003682671483747254
+        tolerance:  0.0029940717379586205
+
+  spikeSourcePoisson_rate:
+    observables:
+      spike rate:
+        spiketimes file: 
+          path: ssp.all.spikes
+          format: ID_TIME
+          id: 0
+        tolerance: 0.008619786077573167
+
+  spikeSourcePoisson2_rate:
+    observables:
+      spike rate:
+        spiketimes file: 
+          path: ssp.all.spikes
+          format: ID_TIME
+          id: 1
+        tolerance: 0.004615791495965277
 

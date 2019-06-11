@@ -25,3 +25,9 @@ experiments:
     spikeGenPoisson2_rate:
         expected:
             spike rate: 20000
+    spikeSourcePoisson_rate:
+        expected:
+            spike rate: 500
+    spikeSourcePoisson2_rate:
+        expected:
+            spike rate: 20000
