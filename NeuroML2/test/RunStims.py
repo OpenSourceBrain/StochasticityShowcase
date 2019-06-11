@@ -41,6 +41,13 @@ def generate():
     sgpPop = Population(id='sgpPop', size=1, component=sgp.id, properties={'color':'.5 0 0'})
     net.populations.append(sgpPop)
 
+    sgrp = Cell(id='sgrp', neuroml2_cell='spikeGeneratorRefPoisson')
+    sgrp.parameters = { 'average_rate':       'rateHz',
+                       'minimum_isi':      '1e-9ms'}
+    net.cells.append(sgrp)
+    sgrpPop = Population(id='sgrpPop', size=1, component=sgrp.id, properties={'color':'.5 0 0'})
+    net.populations.append(sgrpPop)
+
 
     net.synapses.append(Synapse(id='ampa', 
                                 pynn_receptor_type='excitatory', 
@@ -85,11 +92,11 @@ if __name__ == "__main__":
         #
         vary = {'rate':[100,500,1000,5000,10000,20000,40000]}
         vary = {'rate':[10,100,500,1000,5000,10000,20000]}
-        vary = {'rateHz':['%sHz'%i for i in [10,100,500,1000,5000,10000,20000]]}
+        vary = {'rateHz':['%sHz'%i for i in [10,100,500,1000,5000,10000,15000,20000,30000,40000,50000]]}
         #vary = {'periodms':['%sms'%(1000/(i+1)) for i in range(10)]}
         
         #vary['seed'] = [i for i in range(30)]
-        vary['seed'] = [i for i in range(2)]
+        vary['seed'] = [i for i in range(10)]
         
         #vary['dt'] = [0.1,0.025,0.01,0.005]
 
@@ -120,6 +127,7 @@ if __name__ == "__main__":
         #ps.plotLines('rate','sspPop[0]/spike:mean_spike_frequency',second_param='seed',save_figure_to='mean_spike_frequency.png')
         #ps.plotLines('rate','sspPop[0]/spike:mean_spike_frequency',second_param='dt',save_figure_to='mean_spike_frequency.png')
         ps.plotLines('rateHz','sgpPop[0]/spike:mean_spike_frequency',second_param='seed',save_figure_to='mean_spike_frequency_sgp.png')
+        ps.plotLines('rateHz','sgrpPop[0]/spike:mean_spike_frequency',second_param='seed',save_figure_to='mean_spike_frequency_sgrp.png')
         #ps.plotLines('periodms','sgPop[0]/spike:mean_spike_frequency',second_param='seed',save_figure_to='mean_spike_frequency_sg.png')
 
         import matplotlib.pyplot as plt
