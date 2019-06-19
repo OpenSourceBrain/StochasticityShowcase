@@ -11,7 +11,7 @@ experiments:
         spiketimes file: 
           path: regular.all.spikes
           format: ID_TIME
-          id: 0
+          ids: 0
         tolerance: 1.3157894736928305e-05
         
   spikeGenRegular50_rate:
@@ -20,7 +20,7 @@ experiments:
         spiketimes file: 
           path: regular.all.spikes
           format: ID_TIME
-          id: 0
+          ids: 0
         tolerance: 5.05047954284521e-06
 
   spikeGenRegular5_rate:
@@ -29,7 +29,7 @@ experiments:
         spiketimes file: 
           path: regular.all.spikes
           format: ID_TIME
-          id: 1
+          ids: 1
         tolerance: 4.999975000146151e-06
 
   spikeGenRegular033_rate:
@@ -38,7 +38,7 @@ experiments:
         spiketimes file: 
           path: regular.all.spikes
           format: ID_TIME
-          id: 2
+          ids: 2
         tolerance: 9.980139522667741e-06
 
   spikeGenRandom_rate:
@@ -47,7 +47,7 @@ experiments:
         spiketimes file: 
           path: random.all.spikes
           format: ID_TIME
-          id: 0
+          ids: 0
         tolerance: 0.0023911860582371673
 
   spikeGenRandom2_rate:
@@ -56,7 +56,7 @@ experiments:
         spiketimes file: 
           path: random.all.spikes
           format: ID_TIME
-          id: 1
+          ids: 1
         tolerance: 0.0008483457258347698
 
   spikeGenPoisson_rate:
@@ -65,7 +65,7 @@ experiments:
         spiketimes file: 
           path: poisson.all.spikes
           format: ID_TIME
-          id: 0
+          ids: 0
         tolerance: 0.01780763755338546
 
   spikeGenPoisson2_rate:
@@ -74,7 +74,7 @@ experiments:
         spiketimes file: 
           path: poisson.all.spikes
           format: ID_TIME
-          id: 1
+          ids: 1
         tolerance:  0.0029940717379586205
 
   spikeSourcePoisson_rate:
@@ -83,7 +83,7 @@ experiments:
         spiketimes file: 
           path: ssp.all.spikes
           format: ID_TIME
-          id: 0
+          ids: 0
         tolerance: 0.008619786077573167
 
   spikeSourcePoisson2_rate:
@@ -92,6 +92,6 @@ experiments:
         spiketimes file: 
           path: ssp.all.spikes
           format: ID_TIME
-          id: 1
+          ids: 1
         tolerance: 0.004615791495965277
 

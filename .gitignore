@@ -31,3 +31,5 @@ NeuroML2/*dat
 /NeuroML2/test/report.*.txt
 *.gv
 /NeuroML2/report.*.txt
+/NeuroML2/regennn.sh
+/NeuroML2/test/clean.sh
