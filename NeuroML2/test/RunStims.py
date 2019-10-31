@@ -16,7 +16,8 @@ def generate():
 
     net.parameters = { 'rate':       50, 
                        'rateHz':     '50Hz', 
-                       'periodms':     '20ms'}
+                       'periodms':     '20ms',
+                       'number':    5}
     
     
     ssp = Cell(id='ssp', pynn_cell='SpikeSourcePoisson')
@@ -24,28 +25,28 @@ def generate():
                        'start':      0,
                        'duration':   1e9}
     net.cells.append(ssp)
-    sspPop = Population(id='sspPop', size=1, component=ssp.id, properties={'color':'.5 0 0'})
+    sspPop = Population(id='sspPop', size='number', component=ssp.id, properties={'color':'.5 0 0'})
     net.populations.append(sspPop)
-
 
     sg = Cell(id='sg', neuroml2_cell='SpikeGenerator')
     sg.parameters = { 'period':       'periodms'}
     net.cells.append(sg)
-    sgPop = Population(id='sgPop', size=1, component=sg.id, properties={'color':'.5 0 0'})
+    sgPop = Population(id='sgPop', size='number', component=sg.id, properties={'color':'0 .5  0'})
     net.populations.append(sgPop)
+    
     
 
     sgp = Cell(id='sgp', neuroml2_cell='spikeGeneratorPoisson')
     sgp.parameters = { 'average_rate':       'rateHz'}
     net.cells.append(sgp)
-    sgpPop = Population(id='sgpPop', size=1, component=sgp.id, properties={'color':'.5 0 0'})
+    sgpPop = Population(id='sgpPop', size='number', component=sgp.id, properties={'color':'0 0 .5'})
     net.populations.append(sgpPop)
 
     sgrp = Cell(id='sgrp', neuroml2_cell='spikeGeneratorRefPoisson')
     sgrp.parameters = { 'average_rate':       'rateHz',
                        'minimum_isi':      '1e-9ms'}
     net.cells.append(sgrp)
-    sgrpPop = Population(id='sgrpPop', size=1, component=sgrp.id, properties={'color':'.5 0 0'})
+    sgrpPop = Population(id='sgrpPop', size='number', component=sgrp.id, properties={'color':'.5 0.5 0'})
     net.populations.append(sgrpPop)
 
 
@@ -72,7 +73,6 @@ def generate():
                      duration='10000',
                      dt='0.025',
                      seed= 123,
-                     recordTraces={'xxx':'*'},
                      recordSpikes={'all':'*'})
 
     sim.to_json_file()
@@ -91,21 +91,24 @@ if __name__ == "__main__":
  
         #
         vary = {'rate':[100,500,1000,5000,10000,20000,40000]}
-        vary = {'rate':[10,100,500,1000,5000,10000,20000]}
-        vary = {'rateHz':['%sHz'%i for i in [10,100,500,1000,5000,10000,15000,20000,30000,40000,50000]]}
+        #vary = {'rate':[100,500]}
+        #vary = {'rate':[10,100,500,1000,5000,10000,15000,20000,30000,38000,39000,40000,50000]}
+        #vary = {'rateHz':['%sHz'%i for i in [10,100,500,1000,5000,10000,15000,20000,30000,40000,50000]]}
         #vary = {'periodms':['%sms'%(1000/(i+1)) for i in range(10)]}
         
         #vary['seed'] = [i for i in range(30)]
-        vary['seed'] = [i for i in range(10)]
+        vary['seed'] = [i for i in range(2)]
         
         #vary['dt'] = [0.1,0.025,0.01,0.005]
 
         simulator = 'jNeuroML'
         simulator = 'jNeuroML_NEURON'
-        simulator = 'PyNN_NEST'
         simulator = 'jNeuroML_NetPyNE'
-        simulator = 'jNeuroML'
+        simulator = 'PyNN_NEST'
+        simulator = 'PyNN_Neuron'
 
+        simulator = 'jNeuroML'
+        
         nmllr = NeuroMLliteRunner('SimTest.json',
                                   simulator=simulator)
 
@@ -125,9 +128,9 @@ if __name__ == "__main__":
         #ps.plotLines('weightInput','mean_spike_frequency',save_figure_to='mean_spike_frequency.png')
         #ps.plotLines('rate','sspPop[0]/spike:mean_spike_frequency',save_figure_to='mean_spike_frequency.png')
         #ps.plotLines('rate','sspPop[0]/spike:mean_spike_frequency',second_param='seed',save_figure_to='mean_spike_frequency.png')
-        #ps.plotLines('rate','sspPop[0]/spike:mean_spike_frequency',second_param='dt',save_figure_to='mean_spike_frequency.png')
-        ps.plotLines('rateHz','sgpPop[0]/spike:mean_spike_frequency',second_param='seed',save_figure_to='mean_spike_frequency_sgp.png')
-        ps.plotLines('rateHz','sgrpPop[0]/spike:mean_spike_frequency',second_param='seed',save_figure_to='mean_spike_frequency_sgrp.png')
+        ps.plotLines('rate','sspPop[0]/spike:mean_spike_frequency',second_param='seed',save_figure_to='mean_spike_frequency.png')
+        #ps.plotLines('rateHz','sgpPop[0]/spike:mean_spike_frequency',second_param='seed',save_figure_to='mean_spike_frequency_sgp.png')
+        #ps.plotLines('rateHz','sgrpPop[0]/spike:mean_spike_frequency',second_param='seed',save_figure_to='mean_spike_frequency_sgrp.png')
         #ps.plotLines('periodms','sgPop[0]/spike:mean_spike_frequency',second_param='seed',save_figure_to='mean_spike_frequency_sg.png')
 
         import matplotlib.pyplot as plt

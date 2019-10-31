@@ -40,7 +40,7 @@ for fn in files:
             assert abs(avg_rate-expected_avg_rate) <= 3
             if ('pois' in fn and not 'ref' in fn) or 'pynn' in fn:
                 print('     Observed std isi: %s, expected: %s'%(std_isi,expected_std_isi))
-                assert abs(std_isi-expected_std_isi) <= 1
+                assert abs(std_isi-expected_std_isi) <= 1.6
                 
 if not '-info' in sys.argv:                
     print("********************************\n*\n* All passed with inputs of %sHz!\n*\n********************************"%expected_avg_rate)

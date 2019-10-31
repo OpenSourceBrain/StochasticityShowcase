@@ -37,7 +37,7 @@ for fn in files:
         print("   Checking %s; check_syns: %s"%(fn,check_syns))
         if not 'syn' in fn or check_syns:
             print('     Observed avg rate: %s, expected: %s'%(avg_rate,expected_avg_rate))
-            assert abs(avg_rate-expected_avg_rate) <= 30
+            assert abs(avg_rate-expected_avg_rate) <= 40
             if ('pois' in fn and not 'ref' in fn) or 'pynn' in fn:
                 print('     Observed std isi: %s, expected: %s'%(std_isi,expected_std_isi))
                 assert abs(std_isi-expected_std_isi) <= 0.005

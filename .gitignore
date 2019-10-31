@@ -33,3 +33,8 @@ NeuroML2/*dat
 /NeuroML2/report.*.txt
 /NeuroML2/regennn.sh
 /NeuroML2/test/clean.sh
+/NeuroML2/test/*.mod
+/NeuroML2/test/x86_64
+/NeuroML2/test/*.dat
+*_netpyne.py
+*_nrn.py
