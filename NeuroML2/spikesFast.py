@@ -36,10 +36,11 @@ for fn in files:
     if not '-info' in sys.argv:
         print("   Checking %s; check_syns: %s"%(fn,check_syns))
         if not 'syn' in fn or check_syns:
-            #print('Observed: %s, expected: %s'%(avg_rate,avg_rate-expected_avg_rate))
-            assert abs(avg_rate-expected_avg_rate) <= 100
+            print('     Observed avg rate: %s, expected: %s'%(avg_rate,expected_avg_rate))
+            assert abs(avg_rate-expected_avg_rate) <= 30
             if ('pois' in fn and not 'ref' in fn) or 'pynn' in fn:
-                assert abs(std_isi-expected_std_isi) <= 100
+                print('     Observed std isi: %s, expected: %s'%(std_isi,expected_std_isi))
+                assert abs(std_isi-expected_std_isi) <= 0.005
                 
 if not '-info' in sys.argv:      
     print("********************************\n*\n* All passed with inputs of %sHz!\n*\n********************************"%expected_avg_rate)
