@@ -48,8 +48,10 @@ script:
 
     - if [[ ${OMV_ENGINE} == "jNeuroML" || ${OMV_ENGINE} == "jNeuroML_NEURON" ]]; then echo "Continuing with test after jNeuroML/jNeuroML_NEURON is run..."; else exit $OMV_SUCCESS; fi
     - echo "Running more tests..."
+    - omv list -V 
     - cd NeuroML2
     - ls -alt
     - python spikes.py ${OMV_ENGINE}
+    - python spikesFast.py ${OMV_ENGINE}
     - exit $OMV_SUCCESS # in case it failed above...
 
