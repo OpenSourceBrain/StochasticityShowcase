@@ -44,11 +44,10 @@ if figure_option in sys.argv:
     import matplotlib.pyplot as plt
     plt.ion()
     vms = cells.get_data().segments[0].filter(name="v")[0]
-    print vms, len(vms)
-    print vms.times, len(vms.times)
+    #print(vms, len(vms))
+    #print(vms.times, len(vms.times))
     i=0
     for vm in vms.T:
-        print vm
         plt.plot(vms.times, vm, label='Noise dt: %sms'%noise_dt[i] if i!=0 else 'No noise')
         i+=1
     plt.xlabel("time (ms)")
