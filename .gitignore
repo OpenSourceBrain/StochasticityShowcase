@@ -39,3 +39,4 @@ NeuroML2/*dat
 *_netpyne.py
 *_nrn.py
 /PyNN/tests.log
+/PyNN/*dat

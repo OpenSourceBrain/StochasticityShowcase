@@ -11,7 +11,17 @@ print("Running example with NoisyCurrentSource using simulator: %s"%simulator_na
 
 exec("from pyNN.%s import *" % simulator_name)
 
-setup()
+duration = 500
+dt = 0.1
+
+test = False
+if '-test' in sys.argv:
+    print("Running longer simulation for testing (see notebook in ../NeuroML)")
+    test = True
+    duration = 30000
+    dt = 0.05
+
+setup(timestep=dt)
 
 filename = normalized_filename("Results", "NoisyCurrentInput", "pkl", simulator_name)
 
@@ -27,23 +37,47 @@ steady = DCSource(amplitude=mean, start=start, stop=stop)
 cells[0].inject(steady)
 
 noise1 = NoisyCurrentSource(mean=mean, stdev=stdev, start=start, stop=stop, dt=noise_dt[1])
+if test:
+    noise_dt[1] = 5.0
+    noise1 = NoisyCurrentSource(mean=0.25, stdev=0.01, start=0, stop=duration, dt=noise_dt[1])
 cells[1].inject(noise1)
 noise1.record()
 
 noise2 = NoisyCurrentSource(mean=mean, stdev=stdev, start=start, stop=stop, dt=noise_dt[2])
+if test:
+    noise_dt[2] = 2.0
+    noise2 = NoisyCurrentSource(mean=0.35, stdev=0.02, start=0, stop=duration, dt=noise_dt[2])
 cells[2].inject(noise2)
 noise2.record()
 
 noise3 = NoisyCurrentSource(mean=mean, stdev=stdev, start=start, stop=stop, dt=noise_dt[3])
-cells[3].inject(noise3)
+if test:
+    noise_dt[3] = 1.0
+    noise3 = NoisyCurrentSource(mean=0.15, stdev=0.01, start=0, stop=duration, dt=noise_dt[3])
 noise3.record()
+cells[3].inject(noise3)
+
+noises = {}
+noises[noise1]=noise_dt[1]
+noises[noise2]=noise_dt[2]
+noises[noise3]=noise_dt[3]
 
 record('v', cells, filename, annotations={'script_name': __file__})
 
-run(500.0)
+run(duration)
 
 figure_option = '--plot-figure'
 
+for n in noises:
+    currs = n.get_data()
+    vms = cells.get_data().segments[0].filter(name="v")[0]
+    times = vms.times
+    fn = 'noise_current_%s_%s.dat'%(simulator_name,noises[n])
+    f = open(fn,'w')
+    for i in range(len(times)):
+        f.write('%e\t%e\n'%(times[i]/1000.0,currs[i]*1e-9))
+    f.close()
+    
 print("Finished")
 
 if figure_option in sys.argv:
@@ -64,13 +98,11 @@ if figure_option in sys.argv:
     
     plt.figure()
     
-    noises = {}
-    noises[noise1]='dt: %sms'%noise_dt[1]
-    noises[noise2]='dt: %sms'%noise_dt[2]
-    noises[noise3]='dt: %sms'%noise_dt[3]
-    
     for n in noises:
-        plt.plot(vms.times, n.get_data(),label=noises[n])
+        currs = n.get_data()
+        plt.plot(vms.times, currs,label='dt: %sms'%noises[n])
+        plt.xlabel("time (ms)")
+        plt.ylabel("Current (nA)")
     
     plt.legend()
 
