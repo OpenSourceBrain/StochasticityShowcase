@@ -1,14 +1,6 @@
 <Lems>
 
 
-    <!-- Specify which component to run -->
-    <Target component="simnet1"/>
-
-    <!-- Include core NeuroML2 ComponentType definitions -->
-    <Include file="PyNN.xml"/>
-    <Include file="Cells.xml"/>
-    <Include file="Networks.xml"/>
-    <Include file="Simulation.xml"/>
 
 
     <ComponentType name="noisyCurrentSource" extends="baseVoltageDepPointCurrentSpiking"

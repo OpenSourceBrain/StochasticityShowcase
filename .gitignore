@@ -40,3 +40,11 @@ NeuroML2/*dat
 *_nrn.py
 /PyNN/tests.log
 /PyNN/*dat
+/NeuroML2/nmllite/*.spikes
+/NeuroML2/nmllite/*.dat
+x86_64
+/NeuroML2/nmllite/*.mod
+report.*.txt
+/NeuroML2/nmllite/LEMS_SimNoisyExample.xml
+/NeuroML2/nmllite/NoisyExample.net.nml
+/NeuroML2/nmllite/NoisyExample__lems.xml
