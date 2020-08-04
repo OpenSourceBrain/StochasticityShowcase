@@ -20,6 +20,8 @@ if '-test' in sys.argv:
     test = True
     duration = 30000
     dt = 0.05
+    
+save_currents = simulator_name == 'nest'
 
 setup(timestep=dt)
 
@@ -41,21 +43,24 @@ if test:
     noise_dt[1] = 5.0
     noise1 = NoisyCurrentSource(mean=0.25, stdev=0.01, start=0, stop=duration, dt=noise_dt[1])
 cells[1].inject(noise1)
-noise1.record()
+if save_currents: 
+    noise1.record()
 
 noise2 = NoisyCurrentSource(mean=mean, stdev=stdev, start=start, stop=stop, dt=noise_dt[2])
 if test:
     noise_dt[2] = 2.0
     noise2 = NoisyCurrentSource(mean=0.35, stdev=0.02, start=0, stop=duration, dt=noise_dt[2])
 cells[2].inject(noise2)
-noise2.record()
+if save_currents: 
+    noise2.record()
 
 noise3 = NoisyCurrentSource(mean=mean, stdev=stdev, start=start, stop=stop, dt=noise_dt[3])
 if test:
     noise_dt[3] = 1.0
     noise3 = NoisyCurrentSource(mean=0.15, stdev=0.01, start=0, stop=duration, dt=noise_dt[3])
-noise3.record()
 cells[3].inject(noise3)
+if save_currents: 
+    noise3.record()
 
 noises = {}
 noises[noise1]=noise_dt[1]
@@ -69,14 +74,23 @@ run(duration)
 figure_option = '--plot-figure'
 
 for n in noises:
-    currs = n.get_data()
     vms = cells.get_data().segments[0].filter(name="v")[0]
     times = vms.times
-    fn = 'noise_current_%s_%s.dat'%(simulator_name,noises[n])
-    f = open(fn,'w')
-    for i in range(len(times)):
-        f.write('%e\t%e\n'%(times[i]/1000.0,currs[i]*1e-9))
-    f.close()
+    
+    if save_currents: 
+        currs = n.get_data()
+        fn = 'noise_current_%s_%s.dat'%(simulator_name,noises[n])
+        f = open(fn,'w')
+        for i in range(len(times)):
+            f.write('%e\t%e\n'%(times[i]/1000.0,currs[i]*1e-9))
+        f.close()
+        
+    for index in range(len(vms.T)):
+        fn = 'v_%s_%s.dat'%(simulator_name,index)
+        f = open(fn,'w')
+        for i in range(len(times)):
+            f.write('%e\t%e\n'%(times[i]/1000.0,vms.T[index][i]/1000.0))
+        f.close()
     
 print("Finished")
 
@@ -96,15 +110,17 @@ if figure_option in sys.argv:
     plt.ylabel("Vm (mV)")
     plt.legend()
     
-    plt.figure()
+    if save_currents: 
     
-    for n in noises:
-        currs = n.get_data()
-        plt.plot(vms.times, currs,label='dt: %sms'%noises[n])
-        plt.xlabel("time (ms)")
-        plt.ylabel("Current (nA)")
-    
-    plt.legend()
+        plt.figure()
+
+        for n in noises:
+            currs = n.get_data()
+            plt.plot(vms.times, currs,label='dt: %sms'%noises[n])
+            plt.xlabel("time (ms)")
+            plt.ylabel("Current (nA)")
+
+        plt.legend()
 
     plt.show()
 else:
