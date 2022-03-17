@@ -21,7 +21,6 @@ jobs:
            - jNeuroML_NetPyNE
            - jNeuroML_validate
            - PyNEURON
-           - "PyNEURON:7.6"
            - PyNN_NEURON
            - PyNN_Nest
 
