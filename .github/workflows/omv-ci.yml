@@ -37,12 +37,11 @@ jobs:
         pip install git+https://github.com/OpenSourceBrain/osb-model-validation
         pip install scipy sympy matplotlib cython pandas tables
         
-    - name: Run OMV tests on engine ${{ matrix.engine }}
+    - name: Run OMV tests on engine ${{ matrix.engine }} & additional tests 
       run: |
-        omv all -V --engine=${{ matrix.engine }}
-        
-    - name: Run additional tests 
-      run: |
+        omv all -V --engine=${{ matrix.engine }}; export OMV_SUCCESS=$?; echo $OMV_SUCCESS
+        echo "Finished all OMV tests"
+     
         if [[ ${OMV_ENGINE} == "jNeuroML" || ${OMV_ENGINE} == "jNeuroML_NEURON" ]]; then echo "Continuing with test after jNeuroML/jNeuroML_NEURON is run..."; else exit $OMV_SUCCESS; fi
         echo "Running more tests..."
         omv list -V 
