@@ -42,13 +42,13 @@ jobs:
         omv all -V --engine=${{ matrix.engine }}; export OMV_SUCCESS=$?; echo $OMV_SUCCESS
         echo "Finished all OMV tests"
      
-        if [[ ${OMV_ENGINE} == "jNeuroML" || ${OMV_ENGINE} == "jNeuroML_NEURON" ]]; then echo "Continuing with test after jNeuroML/jNeuroML_NEURON is run..."; else exit $OMV_SUCCESS; fi
+        if [[ ${{ matrix.engine }} == "jNeuroML" || ${{ matrix.engine }} == "jNeuroML_NEURON" ]]; then echo "Continuing with test after jNeuroML/jNeuroML_NEURON is run..."; else exit $OMV_SUCCESS; fi
         echo "Running more tests..."
         omv list -V 
         cd NeuroML2
         ls -alt
-        python spikes.py ${OMV_ENGINE}
-        python spikesFast.py ${OMV_ENGINE}
+        python spikes.py ${{ matrix.engine }}
+        python spikesFast.py ${{ matrix.engine }}
         exit $OMV_SUCCESS # in case it failed above...
         
     - name: OMV final version info
