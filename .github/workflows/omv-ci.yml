@@ -20,12 +20,10 @@ jobs:
            - jNeuroML_NEURON
            - jNeuroML_NetPyNE
            - jNeuroML_validate
-           - "PyNEURON:7.4"
-           - "PyNEURON:7.5"
+           - PyNEURON
            - "PyNEURON:7.6"
            - PyNN_NEURON
            - PyNN_Nest
-           - PyNN_Brian1
 
     steps:
     - uses: actions/checkout@v2
