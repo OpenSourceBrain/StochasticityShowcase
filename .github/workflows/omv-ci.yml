@@ -50,6 +50,7 @@ jobs:
         python spikes.py ${{ matrix.engine }}
         python spikesFast.py ${{ matrix.engine }}
         exit $OMV_SUCCESS # in case it failed above...
+        echo Shouldn't get here...
         
     - name: OMV final version info
       run: |
