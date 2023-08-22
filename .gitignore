@@ -48,3 +48,5 @@ report.*.txt
 /NeuroML2/nmllite/LEMS_SimNoisyExample.xml
 /NeuroML2/nmllite/NoisyExample.net.nml
 /NeuroML2/nmllite/NoisyExample__lems.xml
+/NeuroML2/arm64
+/NeuroML2/nmllite/arm64 

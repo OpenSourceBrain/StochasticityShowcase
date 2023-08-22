@@ -43,7 +43,6 @@
         <inputList id="stimInput" component="pulseGen0" population="Pop0">
             <input id="0" target="../Pop0/0/IF_curr_exp" destination="synapses"/>
         </inputList>
-
         <inputList id="noisy1" component="noisyCurrentSource1" population="Pop0">
             <input id="0" target="../Pop0/1/IF_curr_exp" destination="synapses"/>
         </inputList>
