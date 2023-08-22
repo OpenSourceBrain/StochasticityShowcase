@@ -1,94 +1,78 @@
 {
     "NoisyExample": {
-        "version": "NeuroMLlite v0.2.1", 
+        "version": "NeuroMLlite v0.5.6",
+        "notes": "Example with NoisyCurrentSource",
         "parameters": {
             "input_amp": 0.9
-        }, 
-        "notes": "Example with NoisyCurrentSource", 
-        "cells": [
-            {
-                "testcell": {
-                    "pynn_cell": "IF_cond_alpha", 
-                    "parameters": {
-                        "tau_refrac": 5, 
-                        "i_offset": 0
-                    }
+        },
+        "cells": {
+            "testcell": {
+                "parameters": {
+                    "tau_refrac": 5,
+                    "i_offset": 0
+                },
+                "pynn_cell": "IF_cond_alpha"
+            }
+        },
+        "input_sources": {
+            "i_clamp": {
+                "parameters": {
+                    "amplitude": "input_amp",
+                    "start": 200.0,
+                    "stop": 800.0
+                },
+                "pynn_input": "DCSource"
+            },
+            "noisyCurrentSource0": {
+                "parameters": {
+                    "mean": "0.5nA"
+                },
+                "lems_source_file": "TestNCS.xml"
+            }
+        },
+        "regions": {
+            "region1": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "width": 1000.0,
+                "height": 100.0,
+                "depth": 1000.0
+            }
+        },
+        "populations": {
+            "pop0": {
+                "size": 1,
+                "component": "testcell",
+                "properties": {
+                    "color": "1 0 0"
+                },
+                "random_layout": {
+                    "region": "region1"
+                }
+            },
+            "pop1": {
+                "size": 3,
+                "component": "testcell",
+                "properties": {
+                    "color": "0 1 0"
+                },
+                "random_layout": {
+                    "region": "region1"
                 }
             }
-        ], 
-        "input_sources": [
-            {
-                "i_clamp": {
-                    "pynn_input": "DCSource", 
-                    "parameters": {
-                        "start": 200.0, 
-                        "stop": 800.0, 
-                        "amplitude": "input_amp"
-                    }
-                }
-            }, 
-            {
-                "noisyCurrentSource0": {
-                    "lems_source_file": "TestNCS.xml", 
-                    "parameters": {
-                        "mean": "0.5nA"
-                    }
-                }
+        },
+        "inputs": {
+            "stim0": {
+                "input_source": "i_clamp",
+                "population": "pop0",
+                "percentage": 100
+            },
+            "stim1": {
+                "input_source": "noisyCurrentSource0",
+                "population": "pop1",
+                "percentage": 100
             }
-        ], 
-        "regions": [
-            {
-                "region1": {
-                    "x": 0.0, 
-                    "y": 0.0, 
-                    "z": 0.0, 
-                    "width": 1000.0, 
-                    "height": 100.0, 
-                    "depth": 1000.0
-                }
-            }
-        ], 
-        "populations": [
-            {
-                "pop0": {
-                    "size": 1, 
-                    "component": "testcell", 
-                    "properties": {
-                        "color": "1 0 0"
-                    }, 
-                    "random_layout": {
-                        "region": "region1"
-                    }
-                }
-            }, 
-            {
-                "pop1": {
-                    "size": 3, 
-                    "component": "testcell", 
-                    "properties": {
-                        "color": "0 1 0"
-                    }, 
-                    "random_layout": {
-                        "region": "region1"
-                    }
-                }
-            }
-        ], 
-        "inputs": [
-            {
-                "stim0": {
-                    "input_source": "i_clamp", 
-                    "population": "pop0", 
-                    "percentage": 100.0
-                }
-            }, 
-            {
-                "stim1": {
-                    "input_source": "noisyCurrentSource0", 
-                    "population": "pop1", 
-                    "percentage": 100.0
-                }
-            }
-        ]
+        }
     }
 }

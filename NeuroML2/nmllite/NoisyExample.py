@@ -58,8 +58,8 @@ sim = Simulation(id='SimNoisyExample',
                  duration='1000',
                  dt='0.01',
                  seed=1234,
-                 recordTraces={'all':'*'},
-                 recordSpikes={'all':'*'})
+                 record_traces={'all':'*'},
+                 record_spikes={'all':'*'})
                  
 sim.to_json_file()
 
