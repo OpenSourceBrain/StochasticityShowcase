@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<neuroml xmlns="http://www.neuroml.org/schema/neuroml2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2 https://raw.github.com/NeuroML/NeuroML2/development/Schemas/NeuroML2/NeuroML_v2.3.xsd" id="ProbUDFSynDoc">
+
+    <!-- Note that order of different LEMS types matters for validation, since the schema defines what order they should appear in -->
+
+    <!--  Reference:
+        https://doi.org/10.1016/S0306-4522(01)00344-X
+        Destexhe, A.; Rudolph, M.; Fellous, J.-M. & Sejnowski, T. J.  Fluctuating synaptic conductances recreate in vivo-like activity in neocortical neurons Neuroscience, 2001, 107, 13-24
+
+        Original mod source: https://modeldb.science/8115
+    -->
+
+    <ComponentType name="Gfluct"
+        extends="baseVoltageDepPointCurrent"
+        description="Fluctuating conductance model for synaptic bombardment: Destexhe et al 2001"
+        >
+
+        <Parameter name="start" dimension="time" description="start time"/>
+        <Parameter name="stop" dimension="time" description="stop time"/>
+
+        <Parameter name="dt" dimension="time" description="simulation time step"/>
+        <Parameter name="E_e" dimension="voltage" description="Excitatory conductance reversal potential"/>
+        <Parameter name="E_i" dimension="voltage" description="Inhibitory conductance reversal potential"/>
+
+        <Parameter name="g_e0" dimension="conductance" description="Average excitatory conductance"/>
+        <Parameter name="g_i0" dimension="conductance" description="Average inhibitory conductance"/>
+
+        <Parameter name="std_e" dimension="conductance" description="Std dev of excitatory conductance"/>
+        <Parameter name="std_i" dimension="conductance" description="Std dev of inhibitory conductance"/>
+
+        <Parameter name="tau_e" dimension="time" description="Time constant of excitatory conductance"/>
+        <Parameter name="tau_i" dimension="time" description="Time constant of inhibitory conductance"/>
+
+        <EventPort name="in" direction="in" description="Note this is not used here. Will be removed in future"/>
+
+        <Exposure name="g_e" dimension="conductance" />
+        <Exposure name="g_i" dimension="conductance" />
+
+        <Dynamics>
+            <!-- total conductances -->
+            <StateVariable name="g_e" exposure="g_e" dimension="conductance" />
+            <StateVariable name="g_i" exposure="g_i" dimension="conductance" />
+            <!-- fluctuating conductances -->
+            <StateVariable name="g_e1" dimension="conductance" />
+            <StateVariable name="g_i1" dimension="conductance" />
+            <StateVariable name="i" exposure="i" dimension="current" />
+
+            <OnEvent port="in"><!--TODO: remove, see above...
+            <StateAssignment variable="i" value="0"/>-->
+            </OnEvent>
+
+            <!-- required ? -->
+            <OnStart>
+                <StateAssignment variable="i" value="0"/>
+                <StateAssignment variable="g_e" value="0"/>
+                <StateAssignment variable="g_i" value="0"/>
+                <StateAssignment variable="g_e1" value="0" />
+                <StateAssignment variable="g_i1" value="0" />
+            </OnStart>
+
+            <!-- before start -->
+            <OnCondition test="t .lt. start">
+                <StateAssignment variable="i" value="0"/>
+                <StateAssignment variable="g_e" value="0"/>
+                <StateAssignment variable="g_i" value="0"/>
+            </OnCondition>
+
+            <!-- oup()-->
+            <OnCondition test="tau_e .neq. 0" >
+                <!-- let exp_e and std_e be computed for each step: we can't have conditionals inside OnStart, although I could use H etc. to hack it -->
+                <StateAssignment variable="g_e" value="exp(-dt/tau_e) * g_e1 + ((std_e * sqrt(1 - exp(-2 * dt/tau_e))) * random(1))" />
+            </OnCondition>
+
+            <OnCondition test="tau_i .neq. 0" >
+                <StateAssignment variable="g_i" value="exp(-dt/tau_i) * g_i1 + ((std_i * sqrt(1 - exp(-2 * dt/tau_i))) * random(1))" />
+            </OnCondition>
+
+            <!-- original mod says g_e = std_e * grand() but that would immediately get overwritten in the next bit, so we think it's the fluctuating current that is calculated here, g_e1 -->
+            <OnCondition test="tau_e .eq. 0" >
+                <StateAssignment variable="g_e1" value="std_e * random(1)" />
+            </OnCondition>
+            <OnCondition test="tau_i .eq. 0" >
+                <StateAssignment variable="g_i1" value="std_i * random(1)" />
+            </OnCondition>
+
+            <OnCondition test="t .geq. start .and. t .lt. stop">
+                <StateAssignment variable="g_e" value="g_e0 + g_e1" />
+                <StateAssignment variable="g_i" value="g_i0 + g_i1" />
+                <StateAssignment variable="i" value="-1 * g_e * (v - E_e) + g_i * (v - E_i)" />
+            </OnCondition>
+
+            <!-- after end -->
+            <OnCondition test="t .geq. stop">
+                <StateAssignment variable="i" value="0"/>
+                <StateAssignment variable="g_e" value="0"/>
+                <StateAssignment variable="g_i" value="0"/>
+            </OnCondition>
+        </Dynamics>
+
+    </ComponentType>
+
+</neuroml>
