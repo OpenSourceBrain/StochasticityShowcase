@@ -17,7 +17,7 @@
         tau_syn_E="0.5" tau_syn_I="0.5" v_init="-65" v_reset="-65.0" v_rest="-65.0" v_thresh="-55.0"/>
 
 
-    <Gfluct id="noisyCurrentSource1" start="1000ms" stop="2000ms" dt="0.5ms" E_e="0mV" E_i="-75mV" g_e0="0.0121 uS" g_i0="0.0573 uS" std_e="0.012 uS" std_i="0.0264 uS" tau_e="2.728 ms" tau_i="10.49 ms"/>
+    <Gfluct id="noisyCurrentSource1" start="1000ms" stop="2000ms" dt="0.05ms" E_e="0mV" E_i="-75mV" g_e0="0.0121 uS" g_i0="0.0573 uS" std_e="0.0030 uS" std_i="0.0066 uS" tau_e="2.728 ms" tau_i="10.49 ms"/>
 
     <network id="net1">
         <population component="IF_curr_exp" id="Pop0" type="populationList"  size="1">
@@ -33,7 +33,7 @@
 
     </network>
 
-    <Simulation id="simnet1" length="3000ms" step="0.5ms" target="net1">
+    <Simulation id="simnet1" length="3000ms" step="0.05ms" target="net1" seed="54320">
 
         <!-- works for jLEMS -->
         <OutputFile id="Currents_file" fileName="i_gfluct.dat">
