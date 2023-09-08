@@ -13,37 +13,95 @@
     <Include file="Gfluct.nml"/>
 
 
-    <IF_curr_exp id="IF_curr_exp" cm="1.0" i_offset="0" tau_m="20.0" tau_refrac="5.0"
+    <IF_curr_exp id="IF_curr_exp" cm="10.0" i_offset="0" tau_m="20.0" tau_refrac="5.0"
         tau_syn_E="0.5" tau_syn_I="0.5" v_init="-65" v_reset="-65.0" v_rest="-65.0" v_thresh="-55.0"/>
 
 
-    <Gfluct id="noisyCurrentSource1" start="1000ms" stop="2000ms" dt="0.05ms" E_e="0mV" E_i="-75mV" g_e0="0.0121 uS" g_i0="0.0573 uS" std_e="0.0030 uS" std_i="0.0066 uS" tau_e="2.728 ms" tau_i="10.49 ms"/>
+    <Gfluct id="both" start="500ms" stop="2500ms" dt="0.05ms" E_e="0mV" E_i="-75mV" g_e0="0.0121 uS" g_i0="0.0573 uS" std_e="0.0030 uS" std_i="0.0066 uS" tau_e="2.728 ms" tau_i="10.49 ms"/>
+    <Gfluct id="only_e" start="500ms" stop="2500ms" dt="0.05ms" E_e="0mV" E_i="-75mV" g_e0="0.0121 uS" g_i0="0.0 uS" std_e="0.0030 uS" std_i="0.00 uS" tau_e="2.728 ms" tau_i="10.49 ms"/>
+    <Gfluct id="only_i" start="500ms" stop="2500ms" dt="0.05ms" E_e="0mV" E_i="-75mV" g_e0="0.0 uS" g_i0="0.0573 uS" std_e="0.00 uS" std_i="0.0066 uS" tau_e="2.728 ms" tau_i="10.49 ms"/>
+    <Gfluct id="steady_e" start="500ms" stop="2500ms" dt="0.05ms" E_e="0mV" E_i="-75mV" g_e0="0.0121 uS" g_i0="0.0 uS" std_e="0.00 uS" std_i="0.00 uS" tau_e="2.728 ms" tau_i="10.49 ms"/>
+    <Gfluct id="steady_i" start="500ms" stop="2500ms" dt="0.05ms" E_e="0mV" E_i="-75mV" g_e0="0.0 uS" g_i0="0.0573 uS" std_e="0.00 uS" std_i="0.00 uS" tau_e="2.728 ms" tau_i="10.49 ms"/>
 
     <network id="net1">
-        <population component="IF_curr_exp" id="Pop0" type="populationList"  size="1">
+        <population component="IF_curr_exp" id="Pop0" type="populationList"  size="5">
             <instance id="0">
                 <location x="120" y="230" z="567"/>
+            </instance>
+            <instance id="1">
+                <location x="270" y="450" z="56"/>
+            </instance>
+            <instance id="2">
+                <location x="54" y="234" z="89"/>
+            </instance>
+            <instance id="3">
+                <location x="154" y="1234" z="89"/>
+            </instance>
+            <instance id="4">
+                <location x="114" y="14" z="889"/>
             </instance>
         </population>
 
 
-        <inputList id="Gfluct0" component="noisyCurrentSource1" population="Pop0">
+        <inputList id="Gfluct0" component="both" population="Pop0">
             <input id="0" target="../Pop0/0/IF_curr_exp" destination="synapses"/>
+        </inputList>
+        <inputList id="Gfluct1" component="only_e" population="Pop0">
+            <input id="0" target="../Pop0/1/IF_curr_exp" destination="synapses"/>
+        </inputList>
+        <inputList id="Gfluct2" component="only_i" population="Pop0">
+            <input id="0" target="../Pop0/2/IF_curr_exp" destination="synapses"/>
+        </inputList>
+        <inputList id="Gfluct3" component="steady_e" population="Pop0">
+            <input id="0" target="../Pop0/3/IF_curr_exp" destination="synapses"/>
+        </inputList>
+        <inputList id="Gfluct4" component="steady_i" population="Pop0">
+            <input id="0" target="../Pop0/4/IF_curr_exp" destination="synapses"/>
         </inputList>
 
     </network>
 
     <Simulation id="simnet1" length="3000ms" step="0.05ms" target="net1" seed="54320">
 
+        <Display id="display_voltages" title="Voltages" timeScale="1ms" xmin="-200" xmax="3400.0" ymin="-67" ymax="-60">
+            <Line id="both: Vm" quantity="Pop0/0/IF_curr_exp/v" scale="1mV" color="#0000ff" timeScale="1ms"/>
+            <Line id="only e: Vm" quantity="Pop0/1/IF_curr_exp/v" scale="1mV" color="#00ffff" timeScale="1ms"/>
+            <Line id="only i: Vm" quantity="Pop0/2/IF_curr_exp/v" scale="1mV" color="#ff00ff" timeScale="1ms"/>
+            <Line id="steady e: Vm" quantity="Pop0/3/IF_curr_exp/v" scale="1mV" color="#ffffff" timeScale="1ms"/>
+            <Line id="steady i: Vm" quantity="Pop0/4/IF_curr_exp/v" scale="1mV" color="#00ff00" timeScale="1ms"/>
+        </Display>
+        <!--
+        <Display id="display_currents" title="Currents" timeScale="1ms" xmin="-200" xmax="3400.0" ymin="-0.2" ymax="2.5">
+            <Line id="Pop0/0: i"  quantity="Pop0/0/IF_curr_exp/synapses:noisyCurrentSource1:0/i" scale="1nA" color="#00ff00" timeScale="1ms"/>
+        </Display>
+
+        <Display id="display_conds_e" title="Conductances_e" timeScale="1ms" xmin="-200" xmax="3400.0" ymin="-0.015" ymax="0.025">
+            <Line id="g_e" quantity="Pop0/0/IF_curr_exp/synapses:noisyCurrentSource1:0/g_e" scale="1uS" color="#00ff00" timeScale="1ms"/>
+            <Line id="g_e1" quantity="Pop0/0/IF_curr_exp/synapses:noisyCurrentSource1:0/g_e1" scale="1uS" color="#ffff00" timeScale="1ms"/>
+        </Display>
+
+        <Display id="display_conds_i" title="Conductances_i" timeScale="1ms" xmin="-200" xmax="3400.0" ymin="-0.03" ymax="0.09">
+            <Line id="g_i" quantity="Pop0/0/IF_curr_exp/synapses:noisyCurrentSource1:0/g_i" scale="1uS" color="#00ff00" timeScale="1ms"/>
+            <Line id="g_i1" quantity="Pop0/0/IF_curr_exp/synapses:noisyCurrentSource1:0/g_i1" scale="1uS" color="#ffff00" timeScale="1ms"/>
+        </Display> -->
+
+
         <!-- works for jLEMS -->
+        <OutputFile id="Volts_file" fileName="v_gfluct.dat">
+            <OutputColumn id="v0" quantity="Pop0/0/IF_curr_exp/v"/> 
+            <OutputColumn id="v1" quantity="Pop0/1/IF_curr_exp/v"/> 
+            <OutputColumn id="v2" quantity="Pop0/2/IF_curr_exp/v"/> 
+            <OutputColumn id="v3" quantity="Pop0/3/IF_curr_exp/v"/> 
+            <OutputColumn id="v4" quantity="Pop0/4/IF_curr_exp/v"/> 
+        </OutputFile>
         <OutputFile id="Currents_file" fileName="i_gfluct.dat">
-            <OutputColumn id="i" quantity="Pop0/0/IF_curr_exp/synapses:noisyCurrentSource1:0/i"/>
+            <OutputColumn id="i" quantity="Pop0/0/IF_curr_exp/synapses:both:0/i"/>
         </OutputFile>
         <OutputFile id="Conductance_file" fileName="g_gfluct.dat">
-            <OutputColumn id="g_e" quantity="Pop0/0/IF_curr_exp/synapses:noisyCurrentSource1:0/g_e"/>
-            <OutputColumn id="g_e1" quantity="Pop0/0/IF_curr_exp/synapses:noisyCurrentSource1:0/g_e1"/>
-            <OutputColumn id="g_i" quantity="Pop0/0/IF_curr_exp/synapses:noisyCurrentSource1:0/g_i"/>
-            <OutputColumn id="g_i1" quantity="Pop0/0/IF_curr_exp/synapses:noisyCurrentSource1:0/g_i1"/>
+            <OutputColumn id="g_e" quantity="Pop0/0/IF_curr_exp/synapses:both:0/g_e"/>
+            <OutputColumn id="g_e1" quantity="Pop0/0/IF_curr_exp/synapses:both:0/g_e1"/>
+            <OutputColumn id="g_i" quantity="Pop0/0/IF_curr_exp/synapses:both:0/g_i"/>
+            <OutputColumn id="g_i1" quantity="Pop0/0/IF_curr_exp/synapses:both:0/g_i1"/>
         </OutputFile>
         <!-- bug: input properties cannot currently be recorded using neuron -->
 
