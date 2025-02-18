@@ -140,7 +140,8 @@
 
             <StateVariable name="r1" dimension="none" />
             <StateVariable name="r2" dimension="none" />
-            <StateVariable name="randn" dimension="none" />
+            <StateVariable name="randn_e" dimension="none" />
+            <StateVariable name="randn_i" dimension="none" />
 
             <OnEvent port="in"><!--TODO: remove, see above...
             <StateAssignment variable="i" value="0"/>-->
@@ -171,25 +172,26 @@
             <OnCondition test="t .geq. start .and. t.lt. stop">
                 <StateAssignment variable="r1" value="random(1)"/>
                 <StateAssignment variable="r2" value="random(1)"/>
-                <StateAssignment variable="randn" value="sqrt(-2*log(r1))*cos(2*3.14159265359*r2)"/>
+                <StateAssignment variable="randn_i" value="sqrt(-2*log(r1))*cos(2*3.14159265359*r2)"/>
+                <StateAssignment variable="randn_e" value="sqrt(-2*log(r1))*sin(2*3.14159265359*r2)"/>
             </OnCondition>
 
             <!-- oup()-->
             <OnCondition test="(t .geq. start .and. t .lt. stop) .and. (tau_e .neq. zeroms)" >
-                <StateAssignment variable="g_e1" value="(exp_e * g_e1_old) + (amp_e * randn)" />
+                <StateAssignment variable="g_e1" value="(exp_e * g_e1_old) + (amp_e * randn_e)" />
                 <StateAssignment variable="g_e1_old" value="g_e1" />
             </OnCondition>
 
             <OnCondition test="(t .geq. start .and. t .lt. stop) .and. (tau_i .neq. zeroms)" >
-                <StateAssignment variable="g_i1" value="(exp_i * g_i1_old) + (amp_i * randn)" />
+                <StateAssignment variable="g_i1" value="(exp_i * g_i1_old) + (amp_i * randn_i)" />
                 <StateAssignment variable="g_i1_old" value="g_i1" />
             </OnCondition>
 
             <OnCondition test="(t .geq. start .and. t .lt. stop) .and. (tau_e .eq. zeroms)" >
-                <StateAssignment variable="g_e1" value="std_e * randn" />
+                <StateAssignment variable="g_e1" value="std_e * randn_e" />
             </OnCondition>
             <OnCondition test="(t .geq. start .and. t .lt. stop) .and. (tau_i .eq. zeroms)" >
-                <StateAssignment variable="g_i1" value="std_i * randn" />
+                <StateAssignment variable="g_i1" value="std_i * randn_i" />
             </OnCondition>
 
             <OnCondition test="t .geq. start .and. t .lt. stop">
@@ -205,7 +207,7 @@
             </OnCondition>
 
             <OnCondition test="t .geq. start .and. t .lt. stop">
-                <StateAssignment variable="i" value="-1 * g_e * (v - E_e) - g_i * (v - E_i)" />
+                <StateAssignment variable="i" value="-1 * (g_e * (v - E_e) + g_i * (v - E_i))" />
             </OnCondition>
 
             <!-- after end -->
